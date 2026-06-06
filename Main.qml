@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 Window {
-    width: 360
+    width: 1080
     height: 640
     visible: true
     title: qsTr("音乐播放器")
@@ -23,7 +23,7 @@ Window {
 
                 Text {
                     width: parent.width / 3
-                    text: "推荐"
+                    text: "歌曲"
                     color: "#ffffff"
                     font.pixelSize: 16
                     horizontalAlignment: Text.AlignHCenter
@@ -110,12 +110,11 @@ Window {
             color: "#ffffff"
 
             Column {
-                anchors.fill: parent
-                padding: 8
-                spacing: 5
+                anchors.centerIn: parent
+                spacing: 8
 
                 Row {
-                    width: parent.width
+                    width: parent.width - 40
                     spacing: 10
 
                     Text {
@@ -123,12 +122,11 @@ Window {
                         color: "#666666"
                         font.pixelSize: 11
                         width: 35
-                        verticalAlignment: Text.AlignVCenter
                     }
 
                     Slider {
                         id: progressSlider
-                        width: parent.width - 70
+                        width: parent.width - 110
                         value: 0.3
                         from: 0
                         to: 1
@@ -155,12 +153,10 @@ Window {
                         font.pixelSize: 11
                         width: 35
                         horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
                     }
                 }
 
                 Row {
-                    width: parent.width
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: 35
 
@@ -168,14 +164,12 @@ Window {
                         text: "♥"
                         color: "#666666"
                         font.pixelSize: 22
-                        anchors.verticalCenter: parent.verticalCenter
                     }
 
                     Text {
                         text: "<<"
                         color: "#333333"
                         font.pixelSize: 22
-                        anchors.verticalCenter: parent.verticalCenter
                     }
 
                     Rectangle {
@@ -197,14 +191,12 @@ Window {
                         text: ">>"
                         color: "#333333"
                         font.pixelSize: 22
-                        anchors.verticalCenter: parent.verticalCenter
                     }
 
                     Text {
                         text: "☰"
                         color: "#666666"
                         font.pixelSize: 22
-                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }
