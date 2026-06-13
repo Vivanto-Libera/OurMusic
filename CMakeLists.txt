@@ -17,7 +17,7 @@ qt_add_qml_module(appOurMusic
     URI OurMusic
     QML_FILES
         Main.qml
-        QML_FILES MainTabButton.qml
+        QML_FILES
         QML_FILES PlayerControllerItem.qml
         RESOURCES src.qrc
 )
