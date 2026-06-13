@@ -14,5 +14,6 @@
         <file>icons/previous.svg</file>
         <file>icons/ramdom.svg</file>
         <file>icons/volume.svg</file>
+        <file>MusicListTabButton.qml</file>
     </qresource>
 </RCC>

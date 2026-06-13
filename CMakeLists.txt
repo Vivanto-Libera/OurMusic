@@ -17,9 +17,10 @@ qt_add_qml_module(appOurMusic
     URI OurMusic
     QML_FILES
         Main.qml
-        QML_FILES
+        QML_FILES MusicListTabButton.qml
         QML_FILES PlayerControllerItem.qml
         RESOURCES src.qrc
+        QML_FILES MusicListTabBar.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
