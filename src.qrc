@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/collection.svg</file>
+        <file>icons/like_empty.svg</file>
+        <file>icons/like_red.svg</file>
+        <file>icons/list_add.svg</file>
+        <file>icons/music_menu.svg</file>
+        <file>icons/mute.svg</file>
+        <file>icons/next.svg</file>
+        <file>icons/pause.svg</file>
+        <file>icons/play.svg</file>
+        <file>icons/play_cycle.svg</file>
+        <file>icons/play_once.svg</file>
+        <file>icons/previous.svg</file>
+        <file>icons/ramdom.svg</file>
+        <file>icons/volume.svg</file>
+    </qresource>
+</RCC>

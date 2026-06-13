@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-ApplicationWindow {
+Window {
     width: 1080
     height: 640
     visible: true
@@ -41,6 +41,14 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.preferredWidth: 200
             Layout.preferredHeight: 200
+
+            PlayerControllerItem {
+                id: playerControllerItem
+                y: 501
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
         }
     }
 }

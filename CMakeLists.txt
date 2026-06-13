@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(OurMusic VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
@@ -17,6 +18,8 @@ qt_add_qml_module(appOurMusic
     QML_FILES
         Main.qml
         QML_FILES MainTabButton.qml
+        QML_FILES PlayerControllerItem.qml
+        RESOURCES src.qrc
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
