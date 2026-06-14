@@ -24,6 +24,7 @@ Window {
         anchors.top: parent.top
         anchors.bottom: playerController.top
     }
+<<<<<<< HEAD
     Component.onCompleted:
     {
 
@@ -32,3 +33,6 @@ Window {
         musicListTabBar.addMusicList("23333")
     }
 }
+=======
+}
+>>>>>>> refs/remotes/origin/master
