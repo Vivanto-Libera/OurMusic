@@ -4,14 +4,13 @@ import QtQuick.Layouts
 
 Container {
     id: tabBar
+    property ListModel tabModel: ListModel{}
     function addMusicList(name)
     {
         tabModel.append({"text": name})
     }
-    property ListModel tabModel: ListModel{}
-
     contentItem: Column {
-        spacing: 2
+        spacing: 4
         Repeater {
             model: tabBar.tabModel
             MusicListTabButton {

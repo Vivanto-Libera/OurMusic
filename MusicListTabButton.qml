@@ -2,7 +2,11 @@ import QtQuick
 import QtQuick.Controls
 
 TabButton {
-    background: Rectangle{color: checked ? "red" : "white"}
+    background: Rectangle
+    {
+        color: checked ? "red" : "white"
+        radius: 8
+    }
     contentItem: Text
     {
         text: parent.text
