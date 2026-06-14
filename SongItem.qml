@@ -14,7 +14,7 @@ Rectangle {
     Rectangle{
         anchors.bottom: parent.bottom
         width: parent.width
-        height: 10
+        height: 1
         color: "red"
     }
 
@@ -27,7 +27,7 @@ Rectangle {
             width: 60
             height: 30
             font.pixelSize: 20
-            icon.source: "icons/play.svg"
+            icon.source: "qrc:/icons/play_black.svg"
             font.weight: Font.Medium
         }
 
@@ -42,20 +42,20 @@ Rectangle {
            width: 60
            height: 30
            font.pixelSize: 20
-           icon.source: "icons/like_empty.svg"
+           icon.source: "qrc:/icons/like_empty.svg"
         }
 
         Button{
             width: 60
             height: 30
             font.pixelSize: 20
-            icon.source: "icons/collection.svg"
+            icon.source: "qrc:/icons/collection.svg"
         }
 
         Button{
             width: 60
             height: 30
-            text: "删除"
+            icon.source: "qrc:/icons/delete.svg"
             font.pixelSize: 20
         }
 

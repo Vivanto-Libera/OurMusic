@@ -16,10 +16,12 @@ Item {
     }
     Button {
         id: edit
+        width: name.height
+        height: name.height
         anchors.verticalCenter: name.verticalCenter
         anchors.left: name.right
         anchors.leftMargin: 10
-        icon.source: "icons/edit.svg"
+        icon.source: "qrc:/icons/edit.svg"
     }
 
     ListView {
@@ -30,7 +32,16 @@ Item {
         anchors.bottom: parent.bottom
         Repeater {
             model: root.songModel
+            SongItem
+            {
+                songName: model.text
+                width: root.width - 16
+            }
         }
+    }
+    function addSong(name)
+    {
+        songModel.append({"text": name})
     }
 
 }

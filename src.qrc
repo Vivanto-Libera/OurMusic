@@ -15,5 +15,7 @@
         <file>icons/ramdom.svg</file>
         <file>icons/volume.svg</file>
         <file>icons/edit.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/play_black.svg</file>
     </qresource>
 </RCC>

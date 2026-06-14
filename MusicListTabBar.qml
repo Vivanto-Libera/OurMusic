@@ -9,7 +9,6 @@ Container {
     {
         tabModel.append({"text": name})
     }
-    property ListModel tabModel: ListModel{}
 
     // 美化：背景圆角、边距
     background: Rectangle {

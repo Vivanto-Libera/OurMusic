@@ -24,15 +24,20 @@ Window {
         anchors.top: parent.top
         anchors.bottom: playerController.top
     }
-<<<<<<< HEAD
+    MusicListMenu
+    {
+        id: musicListMenu
+        anchors.left: musicListTabBar.right
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: playerController.top
+    }
+
     Component.onCompleted:
     {
-
         musicListTabBar.addMusicList("233")
         musicListTabBar.addMusicList("2333")
         musicListTabBar.addMusicList("23333")
+        musicListMenu.addSong("233")
     }
 }
-=======
-}
->>>>>>> refs/remotes/origin/master
