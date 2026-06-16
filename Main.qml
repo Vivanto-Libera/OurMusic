@@ -39,5 +39,6 @@ Window {
         musicListTabBar.addMusicList("2333")
         musicListTabBar.addMusicList("23333")
         musicListMenu.addSong("233")
+        musicListMenu.addSong("2333")
     }
 }

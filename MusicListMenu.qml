@@ -24,8 +24,8 @@ Item {
         icon.source: "qrc:/icons/edit.svg"
     }
 
-    ListView {
-        id: listView
+    Column {
+        id: column
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: name.bottom
