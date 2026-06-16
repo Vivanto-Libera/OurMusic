@@ -5,6 +5,7 @@
 #include <QQmlEngine>
 #include <QString>
 #include <QList>
+#include <QtQml/qqmlregistration.h>
 #include "song.h"
 
 class MusicCollection : public QObject

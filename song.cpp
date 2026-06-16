@@ -1,7 +1,7 @@
 #include "song.h"
 
 Song::Song(const QString& name, const QString& singer, const QString& album, const QString& url, int duration, const QList<QString>& lyrics)
-    : m_name(name), m_singer(singer), m_album(album), m_url(url), m_duration(duration), m_lyrics(lyrics)
+    : m_name(name), m_singer(singer), m_album(album), m_url(url), m_duration(duration), m_lyrics(lyrics),QObject(nullptr)
 {
 }
 

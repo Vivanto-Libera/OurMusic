@@ -1,12 +1,14 @@
 import QtQuick
 import QtQuick.Controls
+import OurMusic
 
 Item {
     id: root
+    property string menuName: "Name"
     property ListModel songModel: ListModel{}
     Text {
         id: name
-        text: qsTr("Name")
+        text: menuName
         anchors.top: parent.top
         font.pixelSize: 24
         horizontalAlignment: Text.AlignHCenter
@@ -34,14 +36,26 @@ Item {
             model: root.songModel
             SongItem
             {
-                songName: model.text
+                songName: model.name
+                album: model.album
+                singer: model.singer
+                duration: model.duration
+                isLiked: model.isLiked
                 width: root.width - 16
             }
         }
     }
-    function addSong(name)
+    function addSong(song)
     {
-        songModel.append({"text": name})
+        let duratoinString
+        let seconds
+        let minutes
+        minutes = parseInt(song.duration / 60)
+        seconds = song.duration - minutes * 60
+        let minStr = minutes.toString().padStart(2, "0")
+        let secStr = seconds.toString().padStart(2, "0")
+        duratoinString = minStr + ":" + secStr
+        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": duratoinString, "isLiked": song.isLiked})
     }
 
 }

@@ -1,12 +1,14 @@
 #ifndef SONG_H
 #define SONG_H
 
-#include <QQmlEngine>
+#include <QtQml/qqmlregistration.h>
 #include <QString>
 #include <QList>
+#include <QObject>
 
-class Song
+class Song :public QObject
 {
+    Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString name READ name CONSTANT)
     Q_PROPERTY(QString singer READ singer CONSTANT)
@@ -15,6 +17,7 @@ class Song
     Q_PROPERTY(int duration READ duration CONSTANT)
     Q_PROPERTY(QList<QString> lyrics READ lyrics CONSTANT)
 public:
+    Song() = default;
     Song(const QString& name, const QString& singer, const QString& album, const QString& url, int duration, const QList<QString>& lyrics);
     QString name() const;
     QString singer() const;
@@ -23,11 +26,11 @@ public:
     int duration() const;
     QList<QString> lyrics() const;
 private:
-    QString m_name;
-    QString m_singer;
-    QString m_album;
+    QString m_name = "Name";
+    QString m_singer = "Singer";
+    QString m_album = "Album";
     QString m_url;
-    int m_duration;
+    int m_duration = 0;
     QList<QString> m_lyrics;
 };
 

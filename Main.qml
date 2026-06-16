@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import OurMusic
 
 Window {
     id: window
@@ -32,13 +33,17 @@ Window {
         anchors.right: parent.right
         anchors.bottom: playerController.top
     }
+    Song
+    {
+        id:song
+    }
 
     Component.onCompleted:
     {
         musicListTabBar.addMusicList("233")
         musicListTabBar.addMusicList("2333")
         musicListTabBar.addMusicList("23333")
-        musicListMenu.addSong("233")
-        musicListMenu.addSong("2333")
+
+        musicListMenu.addSong(song)
     }
 }

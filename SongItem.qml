@@ -12,13 +12,11 @@ Rectangle {
     property string album: "专辑"
     property string duration: "03:30"
     property bool isLiked: false
-    property bool isFavorited: false
 
     signal playClicked()
     signal editClicked()
     signal likeClicked(var liked)
     signal addToPlaylistClicked()
-    signal favoriteClicked(var favorited)
     signal deleteClicked()
 
     // 分隔线
@@ -90,13 +88,14 @@ Rectangle {
                 id: likeBtn
                 width: 32
                 height: 32
-                icon.source: "qrc:/icons/like_empty.svg"
+                icon.source: checked ? "qrc:/icons/like_red.svg" : "qrc:/icons/like_empty.svg"
+                checkable: true
                 background: Rectangle {
                     color: likeBtn.pressed ? "#e2e8f0" : "transparent"
                     radius: 16
                 }
                 onClicked: {
-                    root.isLiked = !root.isLiked
+                    root.isLiked = likeBtn.checked
                     root.likeClicked(root.isLiked)
                 }
             }
@@ -123,8 +122,7 @@ Rectangle {
                     radius: 16
                 }
                 onClicked: {
-                    root.isFavorited = !root.isFavorited
-                    root.favoriteClicked(root.isFavorited)
+                    //ToDo
                 }
             }
 
@@ -153,11 +151,13 @@ Rectangle {
         }
     }
 
-    MouseArea {
+    TapHandler {
         id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
         acceptedButtons: Qt.NoButton
+    }
+    Component.onCompleted:
+    {
+        likeBtn.checked = isLiked
     }
 }
