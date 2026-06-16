@@ -41,7 +41,7 @@ Rectangle {
             width: 36
             height: 36
             anchors.verticalCenter: parent.verticalCenter
-            icon.source: "qrc:/icons/play.svg"
+            icon.source: "qrc:/icons/play_black.svg"
             background: Rectangle {
                 color: playBtn.pressed ? "#e2e8f0" : "#f1f5f9"
                 radius: 18
