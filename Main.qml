@@ -45,5 +45,10 @@ Window {
         musicListTabBar.addMusicList("23333")
 
         musicListMenu.addSong(song)
+
+        musicListTabBar.tabSelected.connect(function(name) {
+            musicListMenu.menuName = name
+
+        })
     }
 }

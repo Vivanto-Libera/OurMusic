@@ -5,12 +5,14 @@ import QtQuick.Layouts
 Container {
     id: tabBar
     property ListModel tabModel: ListModel{}
+
+    signal tabSelected(string name)
+
     function addMusicList(name)
     {
         tabModel.append({"text": name})
     }
 
-    // 美化：背景圆角、边距
     background: Rectangle {
         color: "#ffffff"
         radius: 8
@@ -25,8 +27,12 @@ Container {
             model: tabBar.tabModel
             MusicListTabButton {
                 text: model.text
-                width: tabBar.width - 16  // 减去左右padding
+                width: tabBar.width - 16
                 height: 50
+
+                onClicked: {
+                    tabBar.tabSelected(model.text)
+                }
             }
         }
     }
