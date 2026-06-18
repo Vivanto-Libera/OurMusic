@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import OurMusic
+import QtQuick.Layouts
 
 Item {
     id: root
@@ -28,6 +29,10 @@ Item {
         anchors.leftMargin: 10
         icon.source: "qrc:/icons/edit.svg"
         visible: root.editable
+        onClicked: {
+            nameInput.text = root.menuName
+            renameDialog.open()
+        }
     }
 
     Button {
@@ -97,4 +102,32 @@ Item {
 
     signal deletePlaylist()
     signal addSongRequested()
+
+    Dialog {
+        id: renameDialog
+        title: "重命名歌单"
+        modal: true
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        ColumnLayout {
+            spacing: 10
+            anchors.fill: parent
+
+            TextField {
+                id: nameInput
+                Layout.fillWidth: true
+                placeholderText: "请输入新名称"
+                focus: true
+                selectByMouse: true
+                onAccepted: renameDialog.accept()
+            }
+        }
+
+        onAccepted: {
+            var newName = nameInput.text.trim()
+            if (newName !== "" && newName !== root.menuName) {
+                root.renameRequested(newName)   // 发送信号
+            }
+        }
+    }
 }

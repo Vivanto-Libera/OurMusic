@@ -30,4 +30,10 @@ Container {
             }
         }
     }
+
+    function setTabName(index, newName) {
+        if (index >= 0 && index < tabModel.count) {
+            tabModel.setProperty(index, "text", newName)
+        }
+    }
 }
