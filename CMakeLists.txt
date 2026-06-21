@@ -29,6 +29,7 @@ qt_add_qml_module(appOurMusic
         musiccollection.h musiccollection.cpp
     RESOURCES
         src.qrc
+        QML_FILES transSecondsToTimeString.js
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

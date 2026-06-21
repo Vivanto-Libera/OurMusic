@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import OurMusic
+import "transSecondsToTimeString.js" as trans
 
 Item {
     id: root
@@ -47,15 +47,7 @@ Item {
     }
     function addSong(song)
     {
-        let duratoinString
-        let seconds
-        let minutes
-        minutes = parseInt(song.duration / 60)
-        seconds = song.duration - minutes * 60
-        let minStr = minutes.toString().padStart(2, "0")
-        let secStr = seconds.toString().padStart(2, "0")
-        duratoinString = minStr + ":" + secStr
-        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": duratoinString, "isLiked": song.isLiked})
+        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": trans.trans(song.duration), "isLiked": song.isLiked})
     }
 
 }
