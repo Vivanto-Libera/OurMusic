@@ -1,11 +1,15 @@
 import QtQuick
 import QtQuick.Controls
-import "transSecondsToTimeString.js" as trans
+import "transSecondsToTimeString.js" as Trans
+import OurMusic
+import QtQuick.Layouts
 
 Item {
     id: root
     property string menuName: "Name"
     property ListModel songModel: ListModel{}
+    property bool editable: true
+
     Text {
         id: name
         text: menuName
@@ -16,6 +20,7 @@ Item {
         font.bold: true
         anchors.horizontalCenter: parent.horizontalCenter
     }
+
     Button {
         id: edit
         width: name.height
@@ -24,6 +29,37 @@ Item {
         anchors.left: name.right
         anchors.leftMargin: 10
         icon.source: "qrc:/icons/edit.svg"
+        visible: root.editable
+        onClicked: {
+            nameInput.text = root.menuName
+            renameDialog.open()
+        }
+    }
+
+    Button {
+        id: deleteBtn
+        width: name.height
+        height: name.height
+        anchors.verticalCenter: name.verticalCenter
+        anchors.left: edit.right
+        anchors.leftMargin: 6
+        icon.source: "qrc:/icons/delete.svg"
+        display: icon.source ? AbstractButton.IconOnly : AbstractButton.TextOnly
+        visible: root.editable
+        onClicked: root.deletePlaylist()
+    }
+
+    Button {
+        id: addBtn
+        width: name.height
+        height: name.height
+        anchors.verticalCenter: name.verticalCenter
+        anchors.left: deleteBtn.right
+        anchors.leftMargin: 6
+        icon.source: "qrc:/icons/add-music.svg"
+        display: icon.source ? AbstractButton.IconOnly : AbstractButton.TextOnly
+        visible: root.editable
+        onClicked: root.addSongRequested()
     }
 
     Column {
@@ -45,9 +81,46 @@ Item {
             }
         }
     }
+
     function addSong(song)
     {
-        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": trans.trans(song.duration), "isLiked": song.isLiked})
+        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Trans.trans(song.duration), "isLiked": song.isLiked})
     }
 
+    function setEditable(editable) {
+        if (typeof editable === "boolean") {
+            root.editable = editable
+        }
+    }
+
+    signal deletePlaylist()
+    signal addSongRequested()
+
+    Dialog {
+        id: renameDialog
+        title: "重命名歌单"
+        modal: true
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        ColumnLayout {
+            spacing: 10
+            anchors.fill: parent
+
+            TextField {
+                id: nameInput
+                Layout.fillWidth: true
+                placeholderText: "请输入新名称"
+                focus: true
+                selectByMouse: true
+                onAccepted: renameDialog.accept()
+            }
+        }
+
+        onAccepted: {
+            var newName = nameInput.text.trim()
+            if (newName !== "" && newName !== root.menuName) {
+                root.renameRequested(newName)   // 发送信号
+            }
+        }
+    }
 }
