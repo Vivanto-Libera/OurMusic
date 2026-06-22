@@ -84,12 +84,15 @@ Item {
 
     function addSong(song)
     {
-        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Trans.trans(song.duration), "isLiked": song.isLiked})
+        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Trans.trans(song.duration), "isLiked": song.isLiked, "url": song.url})
     }
 
     function setEditable(editable) {
         if (typeof editable === "boolean") {
             root.editable = editable
+            edit.visible = editable
+            deleteBtn.visible = editable
+            addBtn.visible = editable
         }
     }
 

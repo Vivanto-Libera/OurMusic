@@ -12,6 +12,7 @@ Rectangle {
     property string album: "专辑"
     property string duration: "03:30"
     property bool isLiked: false
+    property string url
 
     signal playClicked()
     signal editClicked()

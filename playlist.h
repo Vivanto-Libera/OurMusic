@@ -3,11 +3,13 @@
 
 #include <QObject>
 #include <QList>
+#include <QQmlEngine>
 #include "song.h"
 
 class PlayList : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 public:
     explicit PlayList(QObject *parent = nullptr);
 

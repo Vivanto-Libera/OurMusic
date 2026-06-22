@@ -15,7 +15,7 @@ Rectangle {
     // 左侧歌曲名称 - 向右移动（增加左边距）
     Text {
         id: name
-        text: qsTr("Name")
+        text: "Name"
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.right: columnLayout.left
@@ -102,7 +102,7 @@ Rectangle {
 
             Text {
                 id: position
-                text: qsTr("00:00")
+                text: "00:00"
                 font.pixelSize: 12
                 color: "#888888"
             }
@@ -141,7 +141,7 @@ Rectangle {
 
             Text {
                 id: duration
-                text: qsTr("00:00")
+                text: "00:00"
                 font.pixelSize: 12
                 color: "#888888"
             }
