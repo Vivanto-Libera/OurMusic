@@ -27,6 +27,9 @@ Rectangle {
         elide: Text.ElideRight
     }
 
+    // 播放模式枚举
+    property int playMode: 0
+
     // 中间控制区域
     ColumnLayout {
         id: columnLayout
@@ -84,12 +87,39 @@ Rectangle {
 
             Button {
                 id: loop_mode
-                icon.source: "qrc:/icons/play_cycle.svg"
                 flat: true
                 icon.width: 26
                 icon.height: 26
                 implicitWidth: 42
                 implicitHeight: 42
+                // 根据不同的playMode变换图标, 0对应循环播放, 1对应单曲循环, 2对应随机播放
+                icon.source: {
+                    switch(playMode){
+                        case 0: return "qrc:/icons/play_cycle.svg"
+                        case 1: return "qrc:/icons/play_once.svg"
+                        case 2: return "qrc:/icons/random.svg"
+                    }
+                }
+                // 点击图标切换playMode
+                onClicked: {
+                    playMode = (playMode + 1)%3
+                    loop_mode.modeChanged(playMode)
+                }
+                signal modeChanged(int mode)
+
+                // 指针悬停显示当前playMode
+                ToolTip{
+                    visible: loop_mode.hovered
+                    text: {
+                        switch(playMode){
+                        case 0: return "列表循环"
+                        case 1: return "单曲循环"
+                        case 2: return "随机循环"
+                        default: return "列表循环"
+                        }
+                    }
+                    delay: 500
+                }
             }
 
             Layout.fillWidth: true
