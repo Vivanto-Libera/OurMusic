@@ -24,7 +24,7 @@ qt_add_qml_module(appOurMusic
         MusicListTabBar.qml
         MusicListMenu.qml
         SongItem.qml
-        transSecondsToTimeString.js
+        utiles.js
     SOURCES
         song.h song.cpp
         musiccollection.h musiccollection.cpp

@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import "transSecondsToTimeString.js" as Trans
+import "utiles.js" as Utiles
 import OurMusic
 import QtQuick.Layouts
 
@@ -84,7 +84,7 @@ Item {
 
     function addSong(song)
     {
-        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Trans.trans(song.duration), "isLiked": song.isLiked, "url": song.url})
+        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Utiles.trans(song.duration), "isLiked": song.isLiked, "url": song.url})
     }
 
     function setEditable(editable) {
