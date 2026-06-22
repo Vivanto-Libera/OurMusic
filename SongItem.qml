@@ -46,6 +46,12 @@ Rectangle {
                 radius: 18
             }
             onClicked: root.playClicked()
+            // 添加悬停文本提示
+            ToolTip{
+                visible: playBtn.hovered
+                text: "播放当前歌曲"
+                delay: 500
+            }
         }
 
         // 歌曲信息：歌名、歌手
@@ -99,6 +105,12 @@ Rectangle {
                     root.isLiked = likeBtn.checked
                     root.likeClicked(root.isLiked)
                 }
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: likeBtn.hovered
+                    text: "喜欢"
+                    delay: 500
+                }
             }
 
             Button {
@@ -111,6 +123,12 @@ Rectangle {
                     radius: 16
                 }
                 onClicked: root.addToPlaylistClicked()
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: addBtn.hovered
+                    text: "添加至播放列表"
+                    delay: 500
+                }
             }
 
             Button {
@@ -125,6 +143,12 @@ Rectangle {
                 onClicked: {
                     //ToDo
                 }
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: favBtn.hovered
+                    text: "收藏"
+                    delay: 500
+                }
             }
 
             Button {
@@ -137,6 +161,12 @@ Rectangle {
                     radius: 16
                 }
                 onClicked: root.deleteClicked()
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: delBtn.hovered
+                    text: "删除"
+                    delay: 500
+                }
             }
         }
 

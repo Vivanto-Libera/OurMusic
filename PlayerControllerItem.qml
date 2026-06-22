@@ -27,6 +27,9 @@ Rectangle {
         elide: Text.ElideRight
     }
 
+    // 播放模式枚举
+    property int playMode: 0
+
     // 中间控制区域
     ColumnLayout {
         id: columnLayout
@@ -36,7 +39,7 @@ Rectangle {
         RowLayout {
             id: rowLayout0
             layoutDirection: Qt.LeftToRight
-            spacing: 14                // 增大按钮间距
+            spacing: 14
 
             Button {
                 id: like
@@ -47,6 +50,12 @@ Rectangle {
                 flat: true
                 implicitWidth: 42
                 implicitHeight: 42
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: like.hovered
+                    text: "喜欢"
+                    delay: 500
+                }
             }
 
             Button {
@@ -57,10 +66,16 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: previous.hovered
+                    text: "上一曲"
+                    delay: 500
+                }
             }
 
             Button {
-                id: roundButton
+                id: play
                 icon.source: "qrc:/icons/play.svg"
                 icon.width: 32
                 icon.height: 32
@@ -70,6 +85,12 @@ Rectangle {
                 }
                 implicitWidth: 54
                 implicitHeight: 54
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: play.hovered
+                    text: "播放/暂停"
+                    delay: 500
+                }
             }
 
             Button {
@@ -80,16 +101,49 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: next.hovered
+                    text: "下一曲"
+                    delay: 500
+                }
             }
 
             Button {
                 id: loop_mode
-                icon.source: "qrc:/icons/play_cycle.svg"
                 flat: true
                 icon.width: 26
                 icon.height: 26
                 implicitWidth: 42
                 implicitHeight: 42
+                // 根据不同的playMode变换图标, 0对应循环播放, 1对应单曲循环, 2对应随机播放
+                icon.source: {
+                    switch(playMode){
+                        case 0: return "qrc:/icons/play_cycle.svg"
+                        case 1: return "qrc:/icons/play_once.svg"
+                        case 2: return "qrc:/icons/random.svg"
+                    }
+                }
+                // 点击图标切换playMode
+                onClicked: {
+                    playMode = (playMode + 1)%3
+                    loop_mode.modeChanged(playMode)
+                }
+                signal modeChanged(int mode)
+
+                // 指针悬停显示当前playMode
+                ToolTip{
+                    visible: loop_mode.hovered
+                    text: {
+                        switch(playMode){
+                        case 0: return "列表循环"
+                        case 1: return "单曲循环"
+                        case 2: return "随机循环"
+                        default: return "列表循环"
+                        }
+                    }
+                    delay: 500
+                }
             }
 
             Layout.fillWidth: true
@@ -155,7 +209,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: 16
-        spacing: 12                 // 增大间距
+        spacing: 12
 
         Button {
             id: collect
@@ -166,8 +220,15 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+            // 添加悬停文本提示
+            ToolTip{
+                visible: collect.hovered
+                text: "收藏"
+                delay: 500
+            }
         }
 
+        // ===== 音量按钮（带竖向滑块 + 数字显示，颜色改为黑色） =====
         Button {
             id: volume
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -177,6 +238,85 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+
+            onClicked: volumePopup.open()
+
+            Popup {
+                id: volumePopup
+                x: volume.width - width/2
+                y: -height - 10
+                width: 70
+                height: 190
+                modal: false
+                closePolicy: Popup.CloseOnPressOutside
+                background: Rectangle {
+                    color: "#ffffff"
+                    radius: 8
+                    border.color: "#dddddd"
+                    border.width: 1
+                }
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    // 显示音量数值（0～100）
+                    Text {
+                        id: volumeValueText
+                        text: Math.round(volumeSlider.value * 100)
+                        font.pixelSize: 14
+                        font.bold: true
+                        color: "#000000"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                    // 竖向滑块【已修复】
+                    Slider {
+                        id: volumeSlider
+                        orientation: Qt.Vertical
+                        from: 0
+                        to: 1
+                        value: 0.5
+                        width: 20
+                        height: 120
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        background: Rectangle {
+                            implicitWidth: 4
+                            implicitHeight: 120
+                            radius: 2
+                            color: "red"
+                            anchors.centerIn: parent
+
+                            // 修改1：填充条顶部锚定，高度反向计算，和圆点同步
+                            Rectangle {
+                                height: parent.height * (1 - (volumeSlider.position || 0))
+                                width: parent.width
+                                radius: 2
+                                color: "#e0e0e0"
+                                anchors.top: parent.top
+                            }
+                        }
+
+                        handle: Rectangle {
+                            implicitWidth: 16
+                            implicitHeight: 16
+                            radius: 8
+                            color: "white"
+                            border.color: "red"
+                            border.width: 2
+                            // 修改2：对标水平Slider官方写法，用slider原生padding/available尺寸计算y
+                            x: (volumeSlider.availableWidth - width) / 2
+                            y: volumeSlider.topPadding + (volumeSlider.availableHeight - height) * volumeSlider.visualPosition
+                        }
+                    }
+                }
+            // 添加悬停文本提示
+            ToolTip{
+                visible: volume.hovered
+                text: "音量大小"
+                delay: 500
+            }
         }
 
         Button {
@@ -188,8 +328,12 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+            // 添加悬停文本提示
+            ToolTip{
+                visible: music_menu.hovered
+                text: "播放列表"
+                delay: 500
+            }
         }
     }
 }
-
-
