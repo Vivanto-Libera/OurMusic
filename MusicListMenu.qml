@@ -95,6 +95,7 @@ Item {
 
     signal deletePlaylist()
     signal addSongRequested()
+    signal renameRequested(string name)
 
     Dialog {
         id: renameDialog
@@ -117,7 +118,7 @@ Item {
         }
 
         onAccepted: {
-            var newName = nameInput.text.trim()
+            let newName = nameInput.text.trim()
             if (newName !== "" && newName !== root.menuName) {
                 root.renameRequested(newName)   // 发送信号
             }

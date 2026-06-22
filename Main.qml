@@ -51,7 +51,7 @@ Window {
         target: musicListMenu
         function onRenameRequested(newName) {
             // 1. 更新标签页按钮文字（第一个标签）
-            musicListTabBar.setTabName(0, newName)
+            musicListTabBar.setTabName(musicListTabBar.currentIndex, newName)
             // 2. 更新当前菜单标题（因为 menuName 是属性绑定，需要手动修改）
             musicListMenu.menuName = newName
         }
