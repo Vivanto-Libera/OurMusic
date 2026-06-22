@@ -350,6 +350,7 @@ Rectangle {
         id: playlistDialog
         title: ""
         modal: true
+        z: 10
         x: parent.width - width - 10
         y: -height - 10
         width: 200
@@ -366,6 +367,7 @@ Rectangle {
                 anchors.margins: 10
                 // 标题文本
                 Text {
+                    id: playListText
                     text: "当前播放列表"
                     font.pixelSize: 15
                     font.bold: true
@@ -376,7 +378,9 @@ Rectangle {
         }
 
         contentItem: ColumnLayout{
-            anchors.fill: parent
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: playListText.bottom
             anchors.margins: 8
             // 列表显示区域
             ListView{
@@ -402,23 +406,14 @@ Rectangle {
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: 14
                         }
-                        // 按钮：下一首播放
-                        Button{
-                            text: "下一首播放"
-                            font.pixelSize: 12
-                            flat: true
-                            onClicked: {
-                                var song = playlistModel.get(index)
-                                playlistModel.remove(index)
-                                playlistModel.insert(0, song)
-                                playlistListView.positionViewAtBeginning()
-                            }
-                        }
                         // 按钮：从列表中删除
                         Button{
-                            text: "删除"
-                            font.pixelSize: 16
-                            flat: true
+                            id: delBtn
+                            anchors.right: parent.right
+                            icon.source: "qrc:/icons/delete.svg"
+                            background: Rectangle{
+                                color: "transparent"
+                            }
                             onClicked: {
                                 playlistModel.remove(index)
                             }
@@ -427,5 +422,13 @@ Rectangle {
                 }
             }
         }
+    }
+    Component.onCompleted: {
+        // 添加测试歌曲到播放列表
+        playlistModel.append({"songName": "起风了"})
+        playlistModel.append({"songName": "稻香"})
+        playlistModel.append({"songName": "晴天"})
+        playlistModel.append({"songName": "夜曲"})
+        playlistModel.append({"songName": "七里香"})
     }
 }

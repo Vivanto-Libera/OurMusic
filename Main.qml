@@ -76,6 +76,7 @@ Window {
         musicListTabBar.addMusicList("2333")
         musicListTabBar.addMusicList("23333")
 
+        musicListMenu.menuName = musicListTabBar.tabModel.get(0).text
         musicListMenu.addSong(song)
 
         musicListTabBar.tabSelected.connect(function(name) {
@@ -83,7 +84,6 @@ Window {
 
         })
     }
-
 
     Connections {
         target: musicListMenu
