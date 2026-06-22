@@ -24,7 +24,6 @@ Container {
         spacing: 4
         padding: 8
         Repeater {
-            id: tabRepeater
             model: tabBar.tabModel
             MusicListTabButton {
                 text: model.text
@@ -35,17 +34,6 @@ Container {
                     tabBar.tabSelected(model.text)
                     tabBar.setCurrentIndex(model.index)
                 }
-            }
-        }
-    }
-    Component.onCompleted:
-    {
-        if (tabRepeater.count > 0) {
-            let firstButton = tabRepeater.itemAt(0)
-            if (firstButton) {
-                firstButton.checked = true
-                tabBar.tabSelected(firstButton.text)
-                tabBar.setCurrentIndex(0)
             }
         }
     }
