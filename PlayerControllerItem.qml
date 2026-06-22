@@ -36,7 +36,7 @@ Rectangle {
         RowLayout {
             id: rowLayout0
             layoutDirection: Qt.LeftToRight
-            spacing: 14                // 增大按钮间距
+            spacing: 14
 
             Button {
                 id: like
@@ -155,7 +155,7 @@ Rectangle {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         anchors.rightMargin: 16
-        spacing: 12                 // 增大间距
+        spacing: 12
 
         Button {
             id: collect
@@ -168,6 +168,7 @@ Rectangle {
             implicitHeight: 40
         }
 
+        // ===== 音量按钮（带竖向滑块 + 数字显示，颜色改为黑色） =====
         Button {
             id: volume
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -177,6 +178,80 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+
+            onClicked: volumePopup.open()
+
+            Popup {
+                id: volumePopup
+                x: volume.width - width/2
+                y: -height - 10
+                width: 70
+                height: 190
+                modal: false
+                closePolicy: Popup.CloseOnPressOutside
+                background: Rectangle {
+                    color: "#ffffff"
+                    radius: 8
+                    border.color: "#dddddd"
+                    border.width: 1
+                }
+
+                Column {
+                    anchors.centerIn: parent
+                    spacing: 6
+
+                    // 显示音量数值（0～100）
+                    Text {
+                        id: volumeValueText
+                        text: Math.round(volumeSlider.value * 100)
+                        font.pixelSize: 14
+                        font.bold: true
+                        color: "#000000"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                    }
+
+                    // 竖向滑块【已修复】
+                    Slider {
+                        id: volumeSlider
+                        orientation: Qt.Vertical
+                        from: 0
+                        to: 1
+                        value: 0.5
+                        width: 20
+                        height: 120
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        background: Rectangle {
+                            implicitWidth: 4
+                            implicitHeight: 120
+                            radius: 2
+                            color: "red"
+                            anchors.centerIn: parent
+
+                            // 修改1：填充条顶部锚定，高度反向计算，和圆点同步
+                            Rectangle {
+                                height: parent.height * (1 - (volumeSlider.position || 0))
+                                width: parent.width
+                                radius: 2
+                                color: "#e0e0e0"
+                                anchors.top: parent.top
+                            }
+                        }
+
+                        handle: Rectangle {
+                            implicitWidth: 16
+                            implicitHeight: 16
+                            radius: 8
+                            color: "white"
+                            border.color: "red"
+                            border.width: 2
+                            // 修改2：对标水平Slider官方写法，用slider原生padding/available尺寸计算y
+                            x: (volumeSlider.availableWidth - width) / 2
+                            y: volumeSlider.topPadding + (volumeSlider.availableHeight - height) * volumeSlider.visualPosition
+                        }
+                    }
+                }
+            }
         }
 
         Button {
@@ -191,5 +266,3 @@ Rectangle {
         }
     }
 }
-
-
