@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
+import "transSecondsToTimeString.js" as Trans
 import OurMusic
+import QtQuick.Layouts
 
 Item {
     id: root
@@ -28,6 +30,10 @@ Item {
         anchors.leftMargin: 10
         icon.source: "qrc:/icons/edit.svg"
         visible: root.editable
+        onClicked: {
+            nameInput.text = root.menuName
+            renameDialog.open()
+        }
     }
 
     Button {
@@ -78,15 +84,7 @@ Item {
 
     function addSong(song)
     {
-        let duratoinString
-        let seconds
-        let minutes
-        minutes = parseInt(song.duration / 60)
-        seconds = song.duration - minutes * 60
-        let minStr = minutes.toString().padStart(2, "0")
-        let secStr = seconds.toString().padStart(2, "0")
-        duratoinString = minStr + ":" + secStr
-        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": duratoinString, "isLiked": song.isLiked})
+        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Trans.trans(song.duration), "isLiked": song.isLiked})
     }
 
     function setEditable(editable) {
@@ -97,4 +95,33 @@ Item {
 
     signal deletePlaylist()
     signal addSongRequested()
+    signal renameRequested(string name)
+
+    Dialog {
+        id: renameDialog
+        title: "重命名歌单"
+        modal: true
+        standardButtons: Dialog.Ok | Dialog.Cancel
+
+        ColumnLayout {
+            spacing: 10
+            anchors.fill: parent
+
+            TextField {
+                id: nameInput
+                Layout.fillWidth: true
+                placeholderText: "请输入新名称"
+                focus: true
+                selectByMouse: true
+                onAccepted: renameDialog.accept()
+            }
+        }
+
+        onAccepted: {
+            let newName = nameInput.text.trim()
+            if (newName !== "" && newName !== root.menuName) {
+                root.renameRequested(newName)   // 发送信号
+            }
+        }
+    }
 }
