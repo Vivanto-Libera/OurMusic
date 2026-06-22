@@ -50,6 +50,12 @@ Rectangle {
                 flat: true
                 implicitWidth: 42
                 implicitHeight: 42
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: like.hovered
+                    text: "喜欢"
+                    delay: 500
+                }
             }
 
             Button {
@@ -60,10 +66,16 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: previous.hovered
+                    text: "上一曲"
+                    delay: 500
+                }
             }
 
             Button {
-                id: roundButton
+                id: play
                 icon.source: "qrc:/icons/play.svg"
                 icon.width: 32
                 icon.height: 32
@@ -73,6 +85,12 @@ Rectangle {
                 }
                 implicitWidth: 54
                 implicitHeight: 54
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: play.hovered
+                    text: "播放/暂停"
+                    delay: 500
+                }
             }
 
             Button {
@@ -83,6 +101,12 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: next.hovered
+                    text: "下一曲"
+                    delay: 500
+                }
             }
 
             Button {
@@ -196,6 +220,12 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+            // 添加悬停文本提示
+            ToolTip{
+                visible: collect.hovered
+                text: "收藏"
+                delay: 500
+            }
         }
 
         Button {
@@ -207,6 +237,12 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+            // 添加悬停文本提示
+            ToolTip{
+                visible: volume.hovered
+                text: "音量大小"
+                delay: 500
+            }
         }
 
         Button {
@@ -218,6 +254,12 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+            // 添加悬停文本提示
+            ToolTip{
+                visible: music_menu.hovered
+                text: "播放列表"
+                delay: 500
+            }
         }
     }
 }
