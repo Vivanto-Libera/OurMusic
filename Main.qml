@@ -8,7 +8,7 @@ Window {
     width: 1080
     height: 640
     visible: true
-    title: qsTr("音乐播放器")
+    title: qsTr("OurMusic")
     color: "#f5f5f5"
     PlayerControllerItem {
         id: playerController

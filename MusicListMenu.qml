@@ -28,6 +28,9 @@ Item {
         anchors.verticalCenter: name.verticalCenter
         anchors.left: name.right
         anchors.leftMargin: 10
+        background: Rectangle {
+            color: "transparent"
+        }
         icon.source: "qrc:/icons/edit.svg"
         visible: root.editable
         onClicked: {
@@ -49,6 +52,9 @@ Item {
         anchors.verticalCenter: name.verticalCenter
         anchors.left: edit.right
         anchors.leftMargin: 6
+        background: Rectangle {
+            color: "transparent"
+        }
         icon.source: "qrc:/icons/delete.svg"
         display: icon.source ? AbstractButton.IconOnly : AbstractButton.TextOnly
         visible: root.editable
@@ -68,6 +74,9 @@ Item {
         anchors.verticalCenter: name.verticalCenter
         anchors.left: deleteBtn.right
         anchors.leftMargin: 6
+        background: Rectangle {
+            color: "transparent"
+        }
         icon.source: "qrc:/icons/add.svg"
         display: icon.source ? AbstractButton.IconOnly : AbstractButton.TextOnly
         visible: root.editable
@@ -117,29 +126,63 @@ Item {
 
     Dialog {
         id: renameDialog
-        title: "重命名歌单"
+        title: ""
         modal: true
+        width: 180
+        height: 150
         standardButtons: Dialog.Ok | Dialog.Cancel
+        anchors.centerIn: parent
+        // 自定义标题栏
+        header: Rectangle {
+                height: 20
+                color: "lightgrey"
+                radius: 12
+                // 只让顶部圆角生效
+                clip: true
 
-        ColumnLayout {
-            spacing: 10
-            anchors.fill: parent
-
-            TextField {
-                id: nameInput
-                Layout.fillWidth: true
-                placeholderText: "请输入新名称"
-                focus: true
-                selectByMouse: true
-                onAccepted: renameDialog.accept()
-            }
+                Text {
+                    text: "重命名歌单"
+                    font.pixelSize: 15
+                    color: "#333333"
+                    anchors.centerIn: parent
+                }
         }
-
-        onAccepted: {
-            let newName = nameInput.text.trim()
-            if (newName !== "" && newName !== root.menuName) {
-                root.renameRequested(newName)   // 发送信号
-            }
+        // 自定义背景
+        background: Rectangle {
+            color: "white"
+            radius: 10
+            border.color: "white"
+            border.width: 1
         }
+        // 输入区域
+        contentItem:
+            ColumnLayout {
+                spacing: 10
+                anchors.fill: parent
+                anchors.margins: 16
+
+                TextField {
+                    id: nameInput
+                    Layout.fillWidth: true
+                    text: root.menuName
+                    placeholderText: "请输入新名称"
+                    focus: true
+                    selectByMouse: true
+                    background: Rectangle {
+                                    color: "#f5f5f5"
+                                    radius: 6
+                                    border.color: "#d0d0d0"
+                                    border.width: 1
+                    }
+                    onAccepted: renameDialog.accept()
+                }
+            }
+
+            onAccepted: {
+                let newName = nameInput.text.trim()
+                if (newName !== "" && newName !== root.menuName) {
+                    root.renameRequested(newName)   // 发送信号
+                }
+            }
     }
 }
