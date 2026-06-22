@@ -22,5 +22,6 @@
         <file>icons/create.svg</file>
         <file>icons/import.svg</file>
         <file>icons/logo.svg</file>
+        <file>icons/close.svg</file>
     </qresource>
 </RCC>
