@@ -30,6 +30,7 @@ qt_add_qml_module(appOurMusic
         musiccollection.h musiccollection.cpp
         playlist.h playlist.cpp
         songfactory.h songfactory.cpp
+        songbroker.h songbroker.cpp
     RESOURCES
         src.qrc
 )
