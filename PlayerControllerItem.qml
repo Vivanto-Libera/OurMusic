@@ -27,6 +27,9 @@ Rectangle {
         elide: Text.ElideRight
     }
 
+    // 播放模式枚举
+    property int playMode: 0
+
     // 中间控制区域
     ColumnLayout {
         id: columnLayout
@@ -47,6 +50,12 @@ Rectangle {
                 flat: true
                 implicitWidth: 42
                 implicitHeight: 42
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: like.hovered
+                    text: "喜欢"
+                    delay: 500
+                }
             }
 
             Button {
@@ -57,10 +66,16 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: previous.hovered
+                    text: "上一曲"
+                    delay: 500
+                }
             }
 
             Button {
-                id: roundButton
+                id: play
                 icon.source: "qrc:/icons/play.svg"
                 icon.width: 32
                 icon.height: 32
@@ -70,6 +85,12 @@ Rectangle {
                 }
                 implicitWidth: 54
                 implicitHeight: 54
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: play.hovered
+                    text: "播放/暂停"
+                    delay: 500
+                }
             }
 
             Button {
@@ -80,16 +101,49 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
+                // 添加悬停文本提示
+                ToolTip{
+                    visible: next.hovered
+                    text: "下一曲"
+                    delay: 500
+                }
             }
 
             Button {
                 id: loop_mode
-                icon.source: "qrc:/icons/play_cycle.svg"
                 flat: true
                 icon.width: 26
                 icon.height: 26
                 implicitWidth: 42
                 implicitHeight: 42
+                // 根据不同的playMode变换图标, 0对应循环播放, 1对应单曲循环, 2对应随机播放
+                icon.source: {
+                    switch(playMode){
+                        case 0: return "qrc:/icons/play_cycle.svg"
+                        case 1: return "qrc:/icons/play_once.svg"
+                        case 2: return "qrc:/icons/random.svg"
+                    }
+                }
+                // 点击图标切换playMode
+                onClicked: {
+                    playMode = (playMode + 1)%3
+                    loop_mode.modeChanged(playMode)
+                }
+                signal modeChanged(int mode)
+
+                // 指针悬停显示当前playMode
+                ToolTip{
+                    visible: loop_mode.hovered
+                    text: {
+                        switch(playMode){
+                        case 0: return "列表循环"
+                        case 1: return "单曲循环"
+                        case 2: return "随机循环"
+                        default: return "列表循环"
+                        }
+                    }
+                    delay: 500
+                }
             }
 
             Layout.fillWidth: true
@@ -166,6 +220,12 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+            // 添加悬停文本提示
+            ToolTip{
+                visible: collect.hovered
+                text: "收藏"
+                delay: 500
+            }
         }
 
         // ===== 音量按钮（带竖向滑块 + 数字显示，颜色改为黑色） =====
@@ -251,6 +311,11 @@ Rectangle {
                         }
                     }
                 }
+            // 添加悬停文本提示
+            ToolTip{
+                visible: volume.hovered
+                text: "音量大小"
+                delay: 500
             }
         }
 
@@ -263,6 +328,12 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+            // 添加悬停文本提示
+            ToolTip{
+                visible: music_menu.hovered
+                text: "播放列表"
+                delay: 500
+            }
         }
     }
 }

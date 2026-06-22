@@ -34,6 +34,12 @@ Item {
             nameInput.text = root.menuName
             renameDialog.open()
         }
+        // 添加悬停文本提示
+        ToolTip{
+            visible: edit.hovered
+            text: "重命名歌单"
+            delay: 500
+        }
     }
 
     Button {
@@ -47,6 +53,12 @@ Item {
         display: icon.source ? AbstractButton.IconOnly : AbstractButton.TextOnly
         visible: root.editable
         onClicked: root.deletePlaylist()
+        // 添加悬停文本提示
+        ToolTip{
+            visible: deleteBtn.hovered
+            text: "删除歌单"
+            delay: 500
+        }
     }
 
     Button {
@@ -60,6 +72,12 @@ Item {
         display: icon.source ? AbstractButton.IconOnly : AbstractButton.TextOnly
         visible: root.editable
         onClicked: root.addSongRequested()
+        // 添加悬停文本提示
+        ToolTip{
+            visible: addBtn.hovered
+            text: "添加歌曲"
+            delay: 500
+        }
     }
 
     Column {
