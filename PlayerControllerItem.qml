@@ -228,11 +228,11 @@ Rectangle {
             }
         }
 
-        // ===== 音量按钮（带竖向滑块 + 数字显示，颜色改为黑色） =====
+        //  音量按钮（带竖向滑块 + 数字显示，颜色改为黑色）
         Button {
             id: volume
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            icon.source: "qrc:/icons/volume.svg"
+            icon.source: volumeSlider.value === 0 ? "qrc:/icons/mute.svg" : "qrc:/icons/volume.svg"
             flat: true
             icon.width: 24
             icon.height: 24
