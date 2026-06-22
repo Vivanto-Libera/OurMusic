@@ -41,3 +41,8 @@ Song* MusicCollection::getSong(int index) const
     }
     return nullptr;
 }
+
+int MusicCollection::count() const
+{
+    return m_songs.count();
+}

@@ -12,7 +12,7 @@ class SongFactory : public QObject
     QML_ELEMENT
 public:
     explicit SongFactory(QObject *parent = nullptr);
-    Song* buildSong(const QString&& url);
+    Song* buildSong(const QString& url);
 };
 
 #endif // SONGFACTORY_H

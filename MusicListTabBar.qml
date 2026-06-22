@@ -32,8 +32,8 @@ Container {
                 height: 50
 
                 onClicked: {
-                    tabBar.tabSelected(model.text)
                     tabBar.setCurrentIndex(model.index)
+                    tabBar.tabSelected(model.text)
                 }
             }
         }

@@ -114,6 +114,11 @@ Item {
         songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Utiles.trans(song.duration), "isLiked": song.isLiked, "url": song.url})
     }
 
+    function clear()
+    {
+        songModel.clear()
+    }
+
     function setEditable(editable) {
         if (typeof editable === "boolean") {
             root.editable = editable

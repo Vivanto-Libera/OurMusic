@@ -33,31 +33,30 @@ Window {
         anchors.right: parent.right
         anchors.bottom: playerController.top
     }
-    Song
-    {
-        id:song
-    }
 
     Component.onCompleted:
     {
-        musicListTabBar.addMusicList("233")
-        musicListTabBar.addMusicList("2333")
-        musicListTabBar.addMusicList("23333")
-
-        musicListMenu.addSong(song)
+        for (let i = 0; i < CollectionBroker.count(); i++)
+        {
+            musicListTabBar.addMusicList(CollectionBroker.findCollection(i).name)
+        }
 
         musicListTabBar.tabSelected.connect(function(name) {
             musicListMenu.menuName = name
-
+            let collection = CollectionBroker.findCollection(musicListTabBar.currentIndex)
+            musicListMenu.clear()
+            for (let i = 0; i < collection.count(); i++)
+            {
+                musicListMenu.addSong(collection.getSong(i))
+            }
+            musicListMenu.setEditable(musicListTabBar.currentIndex > 1)
         })
     }
 
     Connections {
         target: musicListMenu
         function onRenameRequested(newName) {
-            // 1. 更新标签页按钮文字（第一个标签）
             musicListTabBar.setTabName(musicListTabBar.currentIndex, newName)
-            // 2. 更新当前菜单标题（因为 menuName 是属性绑定，需要手动修改）
             musicListMenu.menuName = newName
         }
     }

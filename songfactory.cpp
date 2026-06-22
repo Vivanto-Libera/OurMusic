@@ -10,7 +10,7 @@ SongFactory::SongFactory(QObject *parent)
     : QObject{parent}
 {}
 
-Song* SongFactory::buildSong(const QString&& url)
+Song* SongFactory::buildSong(const QString& url)
 {
     QMediaPlayer player;
     player.setSource(QUrl(url));
@@ -22,8 +22,7 @@ Song* SongFactory::buildSong(const QString&& url)
     int duration = metaData.value(QMediaMetaData::Duration).toInt();
     
     if (name.isEmpty()) {
-        QFileInfo fileInfo(QUrl(url).toLocalFile());
-        name = fileInfo.baseName();
+        name = "Unknown";
     }
     if (singer.isEmpty()) {
         singer = "Unknown";
