@@ -243,7 +243,7 @@ Rectangle {
 
             Popup {
                 id: volumePopup
-                x: volume.width - width/2
+                x:  (volume.width - volumePopup.width) / 2
                 y: -height - 10
                 width: 70
                 height: 190
@@ -270,7 +270,7 @@ Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
 
-                    // 竖向滑块【已修复】
+                    // 竖向滑块
                     Slider {
                         id: volumeSlider
                         orientation: Qt.Vertical
@@ -304,8 +304,7 @@ Rectangle {
                             radius: 8
                             color: "white"
                             border.color: "red"
-                            border.width: 2
-                            // 修改2：对标水平Slider官方写法，用slider原生padding/available尺寸计算y
+                            border.width: 2            
                             x: (volumeSlider.availableWidth - width) / 2
                             y: volumeSlider.topPadding + (volumeSlider.availableHeight - height) * volumeSlider.visualPosition
                         }
