@@ -311,6 +311,7 @@ Rectangle {
                         }
                     }
                 }
+            }
             // 添加悬停文本提示
             ToolTip{
                 visible: volume.hovered
