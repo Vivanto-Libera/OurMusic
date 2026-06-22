@@ -32,6 +32,7 @@ Container {
 
                 onClicked: {
                     tabBar.tabSelected(model.text)
+                    tabBar.setCurrentIndex(model.index)
                 }
             }
         }

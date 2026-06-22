@@ -18,5 +18,6 @@
         <file>icons/delete.svg</file>
         <file>icons/play_black.svg</file>
         <file>icons/add-music.svg</file>
+        <file>icons/add.svg</file>
     </qresource>
 </RCC>

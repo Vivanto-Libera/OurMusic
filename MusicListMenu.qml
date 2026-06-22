@@ -56,7 +56,7 @@ Item {
         anchors.verticalCenter: name.verticalCenter
         anchors.left: deleteBtn.right
         anchors.leftMargin: 6
-        icon.source: "qrc:/icons/add-music.svg"
+        icon.source: "qrc:/icons/add.svg"
         display: icon.source ? AbstractButton.IconOnly : AbstractButton.TextOnly
         visible: root.editable
         onClicked: root.addSongRequested()
