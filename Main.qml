@@ -21,7 +21,7 @@ Window {
         z: 1  // 在顶层
         Row {
             anchors.left: parent.left
-            anchors.leftMargin: 20
+            anchors.leftMargin: 10
             anchors.verticalCenter: parent.verticalCenter
             spacing: 12
             // Logo 图标

@@ -19,5 +19,8 @@
         <file>icons/play_black.svg</file>
         <file>icons/add-music.svg</file>
         <file>icons/add.svg</file>
+        <file>icons/create.svg</file>
+        <file>icons/import.svg</file>
+        <file>icons/logo.svg</file>
     </qresource>
 </RCC>
