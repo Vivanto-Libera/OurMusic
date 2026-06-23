@@ -12,7 +12,17 @@ Rectangle {
     border.color: "#dddddd"
     border.width: 1
 
-    // 左侧歌曲名称 - 向右移动（增加左边距）
+    // 播放模式枚举
+    property int playMode: 0
+
+    // 播放列表
+    property ListModel playlistModel: ListModel{}
+    // 添加歌曲到播放列表
+    function addToPlaylist(songName){
+        playlistModel.append({"songName" : songName})
+    }
+
+    // 左侧歌曲名称 - 向右移动
     Text {
         id: name
         text: "Name"
@@ -26,9 +36,6 @@ Rectangle {
         width: 120
         elide: Text.ElideRight
     }
-
-    // 播放模式枚举
-    property int playMode: 0
 
     // 中间控制区域
     ColumnLayout {
@@ -319,7 +326,7 @@ Rectangle {
                 delay: 500
             }
         }
-
+        // 播放列表按钮
         Button {
             id: music_menu
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -335,6 +342,93 @@ Rectangle {
                 text: "播放列表"
                 delay: 500
             }
+            onClicked: playlistDialog.open()
         }
+    }
+    // 点击播放列表弹出的对话框
+    Dialog{
+        id: playlistDialog
+        title: ""
+        modal: true
+        z: 10
+        x: parent.width - width - 10
+        y: -height - 10
+        width: 200
+        height: 300
+
+        // 自定义标题栏
+        header: Rectangle {
+            height: 50
+            color: "#f5f5f5"
+            clip: true
+
+            RowLayout {
+                anchors.fill: parent
+                anchors.margins: 10
+                // 标题文本
+                Text {
+                    id: playListText
+                    text: "当前播放列表"
+                    font.pixelSize: 15
+                    font.bold: true
+                    color: "#333333"
+                    Layout.fillWidth: true
+                }
+            }
+        }
+
+        contentItem: ColumnLayout{
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: playListText.bottom
+            anchors.margins: 8
+            // 列表显示区域
+            ListView{
+                id: playlistListView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                model: playlistModel
+
+                delegate: Rectangle{
+                    width: playlistListView.width
+                    height: 40
+                    color: index % 2 === 0 ? "#f8f8f8" : "white"
+
+                    RowLayout{
+                        anchors.fill: parent
+                        anchors.margins: 4
+                        spacing: 8
+                        // 歌曲名称
+                        Text{
+                            text: model.songName
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.pixelSize: 14
+                        }
+                        // 按钮：从列表中删除
+                        Button{
+                            id: delBtn
+                            anchors.right: parent.right
+                            icon.source: "qrc:/icons/delete.svg"
+                            background: Rectangle{
+                                color: "transparent"
+                            }
+                            onClicked: {
+                                playlistModel.remove(index)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Component.onCompleted: {
+        // 添加测试歌曲到播放列表
+        playlistModel.append({"songName": "起风了"})
+        playlistModel.append({"songName": "稻香"})
+        playlistModel.append({"songName": "晴天"})
+        playlistModel.append({"songName": "夜曲"})
+        playlistModel.append({"songName": "七里香"})
     }
 }

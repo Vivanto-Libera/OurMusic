@@ -6,9 +6,15 @@ import QtQuick.Layouts
 
 Item {
     id: root
+
     property string menuName: "Name"
     property ListModel songModel: ListModel{}
     property bool editable: true
+
+    signal deletePlaylist()
+    signal addSongRequested()
+    signal renameRequested(string name)
+    signal addSongToPlaylistRequested(string songName)
 
     Text {
         id: name
@@ -105,6 +111,10 @@ Item {
                 duration: model.duration
                 isLiked: model.isLiked
                 width: root.width - 16
+
+                onAddToPlaylistClicked: {
+                    root.addSongToPlaylistRequested(model.name)
+                }
             }
         }
     }
@@ -127,10 +137,6 @@ Item {
             addBtn.visible = editable
         }
     }
-
-    signal deletePlaylist()
-    signal addSongRequested()
-    signal renameRequested(string name)
 
     Dialog {
         id: renameDialog
