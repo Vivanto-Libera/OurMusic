@@ -228,7 +228,6 @@ Rectangle {
             }
         }
 
-        //  音量按钮（带竖向滑块 + 数字显示，颜色改为黑色）
         Button {
             id: volume
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -239,7 +238,20 @@ Rectangle {
             implicitWidth: 40
             implicitHeight: 40
 
+            // 新增：记录非零音量（用于双击恢复）
+            property real previousVolume: 0.5
+
             onClicked: volumePopup.open()
+
+            // 新增：双击切换静音/恢复
+            onDoubleClicked: {
+                if (volumeSlider.value > 0) {
+                    previousVolume = volumeSlider.value
+                    volumeSlider.value = 0
+                } else {
+                    volumeSlider.value = previousVolume > 0 ? previousVolume : 0.5
+                }
+            }
 
             Popup {
                 id: volumePopup
@@ -260,7 +272,6 @@ Rectangle {
                     anchors.centerIn: parent
                     spacing: 6
 
-                    // 显示音量数值（0～100）
                     Text {
                         id: volumeValueText
                         text: Math.round(volumeSlider.value * 100)
@@ -270,7 +281,6 @@ Rectangle {
                         anchors.horizontalCenter: parent.horizontalCenter
                     }
 
-                    // 竖向滑块
                     Slider {
                         id: volumeSlider
                         orientation: Qt.Vertical
@@ -288,7 +298,6 @@ Rectangle {
                             color: "red"
                             anchors.centerIn: parent
 
-                            // 修改1：填充条顶部锚定，高度反向计算，和圆点同步
                             Rectangle {
                                 height: parent.height * (1 - (volumeSlider.position || 0))
                                 width: parent.width
@@ -304,15 +313,15 @@ Rectangle {
                             radius: 8
                             color: "white"
                             border.color: "red"
-                            border.width: 2            
+                            border.width: 2
                             x: (volumeSlider.availableWidth - width) / 2
                             y: volumeSlider.topPadding + (volumeSlider.availableHeight - height) * volumeSlider.visualPosition
                         }
                     }
                 }
             }
-            // 添加悬停文本提示
-            ToolTip{
+
+            ToolTip {
                 visible: volume.hovered
                 text: "音量大小"
                 delay: 500
