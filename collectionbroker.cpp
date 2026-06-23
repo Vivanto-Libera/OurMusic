@@ -122,3 +122,15 @@ void CollectionBroker::reloadLikedMusic()
         }
     }
 }
+
+void CollectionBroker::reloadAllMusic()
+{
+    SongBroker* sb = SongBroker::singleton();
+    MusicCollection* allMusic = m_collections.at(0);
+    allMusic->clear();
+    QList<Song*> allSongs = sb->getAllSongs();
+    for (const auto& song : allSongs)
+    {
+        allMusic->addSong(song->url());
+    }
+}

@@ -14,6 +14,7 @@ class SongBroker : public QObject
 public:
     explicit SongBroker(QObject *parent = nullptr);
     Q_INVOKABLE static SongBroker* singleton();
+    Q_INVOKABLE void addSong(QString url);
     Q_INVOKABLE Song* findSongByUrl(QString url);
     Q_INVOKABLE QList<Song*> getAllSongs();
     Q_INVOKABLE void setSongLiked(QString url, bool liked);

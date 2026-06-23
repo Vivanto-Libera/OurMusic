@@ -131,12 +131,9 @@ Container {
 
         onAccepted: {
             let files = importSongDialog.selectedFiles
-            console.log("选择了" + files.length + "个文件")
             for(let i = 0; i<files.length; i++){
                 let filePath = files[i]
-                let fileName = filePath.toString().split('/').pop()
-                let currentPlaylist = 0
-                root.songAdded(filePath)
+                tabBar.songAdded(filePath)
             }
         }
 

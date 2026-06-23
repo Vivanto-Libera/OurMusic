@@ -19,6 +19,7 @@ public:
     Q_INVOKABLE int count();
     Q_INVOKABLE void save();
     Q_INVOKABLE void reloadLikedMusic();
+    Q_INVOKABLE void reloadAllMusic();
 
 private:
     QList<MusicCollection*> m_collections;

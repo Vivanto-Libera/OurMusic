@@ -12,7 +12,6 @@ Window {
     title: qsTr("OurMusic")
     color: "#f5f5f5"
 
-    property string singer: string
 
     Rectangle {
         id: titleBar
@@ -84,6 +83,10 @@ Window {
             {
                 CollectionBroker.singleton().reloadLikedMusic()
             }
+            if (musicListTabBar.currentIndex === 0)
+            {
+                CollectionBroker.singleton().reloadAllMusic()
+            }
 
             for (let i = 0; i < collection.count(); i++)
             {
@@ -93,6 +96,11 @@ Window {
         })
         musicListTabBar.setCurrentIndex(0)
         musicListTabBar.tabSelected()
+
+        musicListTabBar.songAdded.connect(function(filePath)
+        {
+            SongBroker.singleton().addSong(filePath)
+        })
     }
 
     Connections {

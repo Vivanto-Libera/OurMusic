@@ -43,6 +43,15 @@ SongBroker *SongBroker::singleton()
     return &instance;
 }
 
+void SongBroker::addSong(QString url)
+{
+    SongFactory factory;
+    Song* song = factory.buildSong(std::move(url));
+    if (song) {
+        m_songs.append(song);
+    }
+}
+
 Song* SongBroker::findSongByUrl(QString url)
 {
     for (Song* song : m_songs) {
@@ -61,7 +70,6 @@ QList<Song *> SongBroker::getAllSongs()
 void SongBroker::setSongLiked(QString url, bool liked)
 {
     findSongByUrl(url)->setLiked(liked);
-    qDebug() << this;
 }
 
 void SongBroker::save()
