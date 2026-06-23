@@ -12,6 +12,8 @@ Window {
     title: qsTr("OurMusic")
     color: "#f5f5f5"
 
+    property string singer: string
+
     Rectangle {
         id: titleBar
         anchors.top: parent.top
