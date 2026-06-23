@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
+import OurMusic
 
 Container {
     id: tabBar
@@ -85,9 +86,8 @@ Container {
                 }
 
                 onClicked: {
-                    tabBar.setCurrentIndex(model.index)
-                    tabBar.tabSelected()
-                    createPlaylistDialog.open()
+                    CollectionBroker.singleton().createdNewCollection()
+                    addMusicList("新建歌单")
                 }
             }
 
@@ -126,7 +126,7 @@ Container {
     FileDialog{
         id: importSongDialog
         title: "选择歌曲文件"
-        nameFilters: ["音频文件(*.mp3 *.flac *.wav *.aac *.ogg)", "所有文件(*.*)"]
+        nameFilters: ["音频文件(*.mp3 *.flac *.wav *.aac *.ogg)"]
         fileMode: FileDialog.OpenFiles
 
         onAccepted: {
@@ -136,14 +136,10 @@ Container {
                 let filePath = files[i]
                 let fileName = filePath.toString().split('/').pop()
                 let currentPlaylist = 0
-                //root.songAdded(filePath)
-                console.log("导入了歌曲:", songName)
+                root.songAdded(filePath)
             }
         }
 
-        onRejected: {
-            console.log("用户已取消选择")
-        }
 
         ToolTip{
             visible: importSongDialog.hovered
