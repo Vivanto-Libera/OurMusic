@@ -1,12 +1,14 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Container {
     id: tabBar
     property ListModel tabModel: ListModel{}
 
     signal tabSelected(string name)
+    signal songAdded(string songName, string filePath)
 
     function addMusicList(name)
     {
@@ -114,9 +116,40 @@ Container {
             }
         }
     }
+
     function setTabName(index, newName) {
         if (index >= 0 && index < tabModel.count) {
             tabModel.setProperty(index, "text", newName)
+        }
+    }
+
+    FileDialog{
+        id: importSongDialog
+        title: "选择歌曲文件"
+        nameFilters: ["音频文件(*.mp3 *.flac *.wav *.aac *.ogg)", "所有文件(*.*)"]
+        fileMode: FileDialog.OpenFiles
+
+        onAccepted: {
+            var files = importSongDialog.selectedFiles
+            console.log("选择了" + files.length + "个文件")
+            for(var i = 0; i<files.length; i++){
+                var filePath = files[i]
+                var fileName = filePath.toString().split('/').pop()
+                var songName = fileName.split('.').slice(0, -1).join('.')
+                var currentPlaylist = 0
+                //root.songAdded(songName, filePath)
+                console.log("导入了歌曲:", songName)
+            }
+        }
+
+        onRejected: {
+            console.log("用户已取消选择")
+        }
+
+        ToolTip{
+            visible: importSongDialog.hovered
+            text: "导入歌曲"
+            delay: 500
         }
     }
 }
