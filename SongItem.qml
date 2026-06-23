@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import OurMusic
 
 Rectangle {
     id: root
@@ -16,9 +17,10 @@ Rectangle {
 
     signal playClicked()
     signal editClicked()
-    signal likeClicked(var liked)
+    signal likeClicked(bool liked)
     signal addToPlaylistClicked()
     signal deleteClicked()
+    signal collected()
 
     // 分隔线
     Rectangle {
@@ -104,6 +106,7 @@ Rectangle {
                 onClicked: {
                     root.isLiked = likeBtn.checked
                     root.likeClicked(root.isLiked)
+                    SongBroker.findSongByUrl(url).liked = root.isLiked)
                 }
                 // 添加悬停文本提示
                 ToolTip{
@@ -132,20 +135,20 @@ Rectangle {
             }
 
             Button {
-                id: favBtn
+                id: clecBtn
                 width: 32
                 height: 32
                 icon.source: "qrc:/icons/collection.svg"
                 background: Rectangle {
-                    color: favBtn.pressed ? "#e2e8f0" : "transparent"
+                    color: clecBtn.pressed ? "#e2e8f0" : "transparent"
                     radius: 16
                 }
                 onClicked: {
-                    //ToDo
+                    root.collected()
                 }
                 // 添加悬停文本提示
                 ToolTip{
-                    visible: favBtn.hovered
+                    visible: clecBtn.hovered
                     text: "收藏"
                     delay: 500
                 }

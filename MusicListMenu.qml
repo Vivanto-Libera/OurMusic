@@ -110,6 +110,7 @@ Item {
                 singer: model.singer
                 duration: model.duration
                 isLiked: model.isLiked
+                url: model.url
                 width: root.width - 16
 
                 onAddToPlaylistClicked: {
@@ -121,7 +122,7 @@ Item {
 
     function addSong(song)
     {
-        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Utiles.trans(song.duration), "isLiked": song.isLiked, "url": song.url})
+        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Utiles.trans(song.duration), "isLiked": song.liked, "url": song.url})
     }
 
     function clear()

@@ -10,11 +10,25 @@
 CollectionBroker::CollectionBroker(QObject *parent)
     : QObject{parent}
 {
+    SongBroker* sb = SongBroker::singleton();
+    MusicCollection* allMusic = new MusicCollection("全部音乐");
+    MusicCollection* likedMusic = new MusicCollection("我喜欢的音乐");
+    QList<Song*> allSongs = sb->getAllSongs();
+    for (const auto& song : allSongs)
+    {
+        allMusic->addSong(song);
+        if (song->liked())
+        {
+            likedMusic->addSong(song);
+        }
+    }
+    m_collections.append(allMusic);
+    m_collections.append(likedMusic);
+
     QFile file("collectiondata.json");
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
-        SongBroker* sb = SongBroker::singleton();
 
         if (doc.isArray()) {
             QJsonArray collectionArray = doc.array();

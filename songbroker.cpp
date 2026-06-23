@@ -22,8 +22,10 @@ SongBroker::SongBroker(QObject *parent)
                 if (value.isObject()) {
                     QJsonObject obj = value.toObject();
                     QString url = obj["url"].toString();
+                    bool liked = obj["liked"].toBool();
                     if (!url.isEmpty()) {
                         Song* song = factory.buildSong(std::move(url));
+                        song->setLiked(liked);
                         if (song) {
                             m_songs.append(song);
                         }
@@ -49,4 +51,9 @@ Song* SongBroker::findSongByUrl(QString url)
         }
     }
     return nullptr;
+}
+
+QList<Song *> SongBroker::getAllSongs()
+{
+    return m_songs;
 }

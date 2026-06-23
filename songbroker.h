@@ -15,6 +15,7 @@ public:
     explicit SongBroker(QObject *parent = nullptr);
     static SongBroker* singleton();
     Q_INVOKABLE Song* findSongByUrl(QString url);
+    Q_INVOKABLE QList<Song*> getAllSongs();
 
 private:
     QList<Song*> m_songs;

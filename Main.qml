@@ -73,9 +73,9 @@ Window {
             musicListTabBar.addMusicList(CollectionBroker.findCollection(i).name)
         }
 
-        musicListTabBar.tabSelected.connect(function(name) {
-            musicListMenu.menuName = name
+        musicListTabBar.tabSelected.connect(function() {
             let collection = CollectionBroker.findCollection(musicListTabBar.currentIndex)
+            musicListMenu.menuName = collection.name;
             musicListMenu.clear()
             for (let i = 0; i < collection.count(); i++)
             {
@@ -83,6 +83,8 @@ Window {
             }
             musicListMenu.setEditable(musicListTabBar.currentIndex > 1)
         })
+        musicListTabBar.setCurrentIndex(0)
+        musicListTabBar.tabSelected()
     }
 
     Connections {
@@ -97,7 +99,6 @@ Window {
         target: musicListMenu
         function onAddSongToPlaylistRequested(songName){
             playerController.addToPlaylist(songName)
-            console.log("已添加至播放列表", songName)
         }
     }
 }

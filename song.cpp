@@ -29,3 +29,13 @@ int Song::duration() const
 {
     return m_duration;
 }
+
+bool Song::liked() const
+{
+    return m_liked;
+}
+
+void Song::setLiked(bool newLiked)
+{
+    m_liked = newLiked;
+}

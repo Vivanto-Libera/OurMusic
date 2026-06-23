@@ -6,7 +6,7 @@ Container {
     id: tabBar
     property ListModel tabModel: ListModel{}
 
-    signal tabSelected(string name)
+    signal tabSelected()
 
     function addMusicList(name)
     {
@@ -46,7 +46,7 @@ Container {
                             if (model.index !== currentIndex)
                             {
                                 tabBar.setCurrentIndex(model.index)
-                                tabBar.tabSelected(model.text)
+                                tabBar.tabSelected()
                             }
                         }
                     }
@@ -84,7 +84,7 @@ Container {
 
                 onClicked: {
                     tabBar.setCurrentIndex(model.index)
-                    tabBar.tabSelected(model.text)
+                    tabBar.tabSelected()
                     createPlaylistDialog.open()
                 }
             }
