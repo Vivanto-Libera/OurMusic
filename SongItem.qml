@@ -106,7 +106,7 @@ Rectangle {
                 onClicked: {
                     root.isLiked = likeBtn.checked
                     root.likeClicked(root.isLiked)
-                    SongBroker.findSongByUrl(url).liked = root.isLiked)
+                    SongBroker.findSongByUrl(url).liked = root.isLiked
                 }
                 // 添加悬停文本提示
                 ToolTip{

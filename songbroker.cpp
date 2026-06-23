@@ -57,3 +57,21 @@ QList<Song *> SongBroker::getAllSongs()
 {
     return m_songs;
 }
+
+void SongBroker::save()
+{
+    QFile file("songdata.json");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        QJsonArray arr;
+        for (const auto& song : m_songs)
+        {
+            QJsonObject obj;
+            obj["url"] = song->url();
+            obj["liked"] = song->liked();
+            arr.append(obj);
+        }
+        QJsonDocument doc(arr);
+        QByteArray data = doc.toJson();
+        file.write(data);
+    }
+}

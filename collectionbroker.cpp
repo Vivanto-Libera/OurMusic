@@ -81,3 +81,29 @@ int CollectionBroker::count()
 {
     return m_collections.count();
 }
+
+void CollectionBroker::save()
+{
+    QFile file("collectiondata.json");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        QJsonArray arr;
+        for (int i = 2; i < m_collections.count(); i++)
+        {
+            MusicCollection *collection = m_collections.at(i);
+            QJsonObject obj;
+            obj["name"] = collection->name();
+            QJsonArray songs;
+            for (const auto& song : collection->getAllSongs())
+            {
+                QJsonObject songUrl;
+                songUrl["url"] = song->url();
+                songs.append(songUrl);
+            }
+            obj["songs"] = songs;
+            arr.append(obj);
+        }
+        QJsonDocument doc(arr);
+        QByteArray data = doc.toJson();
+        file.write(data);
+    }
+}

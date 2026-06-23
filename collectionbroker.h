@@ -17,6 +17,7 @@ public:
     Q_INVOKABLE void deleteCollection(int index);
     Q_INVOKABLE void createdNewCollection();
     Q_INVOKABLE int count();
+    Q_INVOKABLE void save();
 
 private:
     QList<MusicCollection*> m_collections;

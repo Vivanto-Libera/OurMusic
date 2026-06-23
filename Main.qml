@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Window
 import OurMusic
 
 Window {
@@ -92,6 +93,7 @@ Window {
         function onRenameRequested(newName) {
             musicListTabBar.setTabName(musicListTabBar.currentIndex, newName)
             musicListMenu.menuName = newName
+            CollectionBroker.findCollection(musicListTabBar.currentIndex).name = newName
         }
     }
 
@@ -100,5 +102,11 @@ Window {
         function onAddSongToPlaylistRequested(songName){
             playerController.addToPlaylist(songName)
         }
+    }
+
+    onClosing: function()
+    {
+        CollectionBroker.save()
+        SongBroker.save()
     }
 }
