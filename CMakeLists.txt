@@ -34,6 +34,7 @@ qt_add_qml_module(appOurMusic
     RESOURCES
         src.qrc
         SOURCES collectionbroker.h collectionbroker.cpp
+        QML_FILES addSongItem.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
