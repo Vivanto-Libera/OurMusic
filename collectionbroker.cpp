@@ -38,9 +38,10 @@ CollectionBroker::CollectionBroker(QObject *parent)
                     QJsonObject collectionObj = value.toObject();
                     MusicCollection* collection = new MusicCollection(collectionObj["name"].toString());
                     QJsonArray songs = collectionObj["songs"].toArray();
-                    for (const QJsonValue& songObj : songs)
+                    for (const QJsonValue& songVal : songs)
                     {
-                        collection->addSong(songObj.toObject()["url"].toString());
+                        QJsonObject songObj = songVal.toObject();
+                        collection->addSong(songObj["url"].toString());
                     }
                     m_collections.append(collection);
                 }

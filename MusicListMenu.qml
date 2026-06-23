@@ -88,13 +88,21 @@ Item {
         onClicked: {
             let allSongs = SongBroker.singleton().getAllSongs()
             songSelectionModel.clear()
+            
+            let existingUrls = []
+            for (let j = 0; j < root.songModel.count; j++) {
+                existingUrls.push(root.songModel.get(j).url)
+            }
+            
             for (let i = 0; i < allSongs.length; i++) {
                 let song = allSongs[i]
-                songSelectionModel.append({
-                    "name": song.name,
-                    "url": song.url,
-                    "selected": false
-                })
+                if (existingUrls.indexOf(song.url) === -1) {
+                    songSelectionModel.append({
+                        "name": song.name,
+                        "url": song.url,
+                        "selected": false
+                    })
+                }
             }
             addSongDialog.open()
         }
@@ -147,24 +155,6 @@ Item {
             deleteBtn.visible = editable
             addBtn.visible = editable
         }
-    }
-
-
-    function addSongByName(songName) {
-        let songBroker = SongBroker.singleton()
-        let allSongs = songBroker.getAllSongs()
-        for (let i = 0; i < allSongs.length; i++) {
-            let song = allSongs[i]
-            if (song.name === songName) {
-                let collection = CollectionBroker.singleton().findCollection(root.currentCollectionIndex)
-                collection.addSong(song.url)
-                root.addSong(song)
-                console.log("已添加歌曲: " + songName)
-                return true
-            }
-        }
-        console.warn("未找到名为 '" + songName + "' 的歌曲")
-        return false
     }
 
     ListModel {

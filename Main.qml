@@ -93,6 +93,7 @@ Window {
                 musicListMenu.addSong(SongBroker.singleton().findSongByUrl(collection.getSong(i)))
             }
             musicListMenu.setEditable(musicListTabBar.currentIndex > 1)
+            musicListMenu.currentCollectionIndex = musicListTabBar.currentIndex
         })
         musicListTabBar.setCurrentIndex(0)
         musicListTabBar.tabSelected()
