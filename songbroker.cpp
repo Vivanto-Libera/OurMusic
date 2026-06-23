@@ -1,6 +1,5 @@
 #include "songbroker.h"
 #include "songfactory.h"
-#include "song.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -36,7 +35,13 @@ SongBroker::SongBroker(QObject *parent)
     }
 }
 
-Song* SongBroker::findSongByUrl(const QString&& url)
+SongBroker *SongBroker::singleton()
+{
+    static SongBroker instance;
+    return &instance;
+}
+
+Song* SongBroker::findSongByUrl(QString url)
 {
     for (Song* song : m_songs) {
         if (song->url() == url) {

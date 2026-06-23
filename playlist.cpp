@@ -23,3 +23,13 @@ void PlayList::clear()
 {
     m_playList.clear();
 }
+
+Song *PlayList::getSong(int index)
+{
+    return m_playList.at(index);
+}
+
+int PlayList::count()
+{
+    return m_playList.count();
+}

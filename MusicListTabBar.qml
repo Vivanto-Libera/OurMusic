@@ -1,12 +1,14 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Container {
     id: tabBar
     property ListModel tabModel: ListModel{}
 
     signal tabSelected(string name)
+    signal songAdded(string songName, string filePath)
 
     function addMusicList(name)
     {
@@ -21,31 +23,96 @@ Container {
     }
 
     contentItem: Column {
-        spacing: 4
-        padding: 8
-        Repeater {
-            id: tabRepeater
-            model: tabBar.tabModel
-            MusicListTabButton {
-                text: model.text
-                width: tabBar.width - 16
-                height: 50
+        spacing: 0
+        padding: 0
+        // 歌单列表（可滚动区域）
+        ScrollView {
+            width: parent.width
+            height: parent.height-50  // 留出底部按钮空间
+            clip: true
+            ScrollBar.vertical.policy: ScrollBar.AsNeeded
 
-                onClicked: {
-                    tabBar.tabSelected(model.text)
-                    tabBar.setCurrentIndex(model.index)
+            Column{
+                spacing: 4
+                padding: 8
+                width: parent.width
+
+                Repeater {
+                    model: tabBar.tabModel
+                    MusicListTabButton {
+                        text: model.text
+                        width: tabBar.width-16
+                        height: 50
+
+                        onClicked: {
+                            if (model.index !== currentIndex)
+                            {
+                                tabBar.setCurrentIndex(model.index)
+                                tabBar.tabSelected(model.text)
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
-    Component.onCompleted:
-    {
-        if (tabRepeater.count > 0) {
-            let firstButton = tabRepeater.itemAt(0)
-            if (firstButton) {
-                firstButton.checked = true
-                tabBar.tabSelected(firstButton.text)
-                tabBar.setCurrentIndex(0)
+        // 分割线
+        Rectangle{
+            width: parent.width
+            height: 1
+            color: "#e8e8e8"
+        }
+        Row{
+            width: parent.width
+            height: 50
+            spacing: 6
+            padding: 8
+            // 按钮区域：创建歌单和导入歌曲
+            Button {
+                width: (parent.width - parent.padding * 2 - parent.spacing) / 2
+                height: parent.height - 16
+                flat: true
+                background: Rectangle {
+                    color: "#EBEBE9"
+                    radius: 6
+                }
+
+                contentItem: Image {
+                    source: "qrc:/icons/create.svg"
+                    width: 24
+                    height: 24
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                }
+
+                onClicked: {
+                    tabBar.setCurrentIndex(model.index)
+                    tabBar.tabSelected(model.text)
+                    createPlaylistDialog.open()
+                }
+            }
+
+            // 导入歌曲按钮
+            Button {
+                width: (parent.width - parent.padding * 2 - parent.spacing) / 2
+                height: parent.height - 16
+                flat: true
+
+                background: Rectangle {
+                    color: "#EBEBE9"
+                    radius: 6
+                }
+
+                contentItem: Image {
+                    source: "qrc:/icons/import.svg"
+                    width: 24
+                    height: 24
+                    fillMode: Image.PreserveAspectFit
+                    anchors.centerIn: parent
+                }
+
+                onClicked: {
+                    importSongDialog.open()
+                }
             }
         }
     }
@@ -53,6 +120,36 @@ Container {
     function setTabName(index, newName) {
         if (index >= 0 && index < tabModel.count) {
             tabModel.setProperty(index, "text", newName)
+        }
+    }
+
+    FileDialog{
+        id: importSongDialog
+        title: "选择歌曲文件"
+        nameFilters: ["音频文件(*.mp3 *.flac *.wav *.aac *.ogg)", "所有文件(*.*)"]
+        fileMode: FileDialog.OpenFiles
+
+        onAccepted: {
+            var files = importSongDialog.selectedFiles
+            console.log("选择了" + files.length + "个文件")
+            for(var i = 0; i<files.length; i++){
+                var filePath = files[i]
+                var fileName = filePath.toString().split('/').pop()
+                var songName = fileName.split('.').slice(0, -1).join('.')
+                var currentPlaylist = 0
+                //root.songAdded(songName, filePath)
+                console.log("导入了歌曲:", songName)
+            }
+        }
+
+        onRejected: {
+            console.log("用户已取消选择")
+        }
+
+        ToolTip{
+            visible: importSongDialog.hovered
+            text: "导入歌曲"
+            delay: 500
         }
     }
 }

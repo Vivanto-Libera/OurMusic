@@ -10,6 +10,41 @@ Window {
     visible: true
     title: qsTr("OurMusic")
     color: "#f5f5f5"
+
+    property string singer: string
+
+    Rectangle {
+        id: titleBar
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: musicListMenu.left
+        height: 60
+        color: "#ffffff"
+        z: 1  // 在顶层
+        Row {
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            spacing: 12
+            // Logo 图标
+            Image {
+                id: logoImage
+                width: 36
+                height: 36
+                source: "qrc:/icons/logo.svg"
+                fillMode: Image.PreserveAspectFit
+            }
+            // OurMusic 文本
+            Text {
+                text: "OurMusic"
+                font.pixelSize: 18
+                font.bold: true
+                color: "#e84c3d"
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        }
+    }
+
     PlayerControllerItem {
         id: playerController
         anchors.left: parent.left
@@ -19,10 +54,9 @@ Window {
 
     MusicListTabBar {
         id: musicListTabBar
-        y: 320
         width: 160
         anchors.left: parent.left
-        anchors.top: parent.top
+        anchors.top: titleBar.bottom
         anchors.bottom: playerController.top
     }
     MusicListMenu
@@ -33,32 +67,39 @@ Window {
         anchors.right: parent.right
         anchors.bottom: playerController.top
     }
-    Song
-    {
-        id:song
-    }
 
     Component.onCompleted:
     {
-        musicListTabBar.addMusicList("233")
-        musicListTabBar.addMusicList("2333")
-        musicListTabBar.addMusicList("23333")
-
-        musicListMenu.addSong(song)
+        for (let i = 0; i < CollectionBroker.count(); i++)
+        {
+            musicListTabBar.addMusicList(CollectionBroker.findCollection(i).name)
+        }
 
         musicListTabBar.tabSelected.connect(function(name) {
             musicListMenu.menuName = name
-
+            let collection = CollectionBroker.findCollection(musicListTabBar.currentIndex)
+            musicListMenu.clear()
+            for (let i = 0; i < collection.count(); i++)
+            {
+                musicListMenu.addSong(collection.getSong(i))
+            }
+            musicListMenu.setEditable(musicListTabBar.currentIndex > 1)
         })
     }
 
     Connections {
         target: musicListMenu
         function onRenameRequested(newName) {
-            // 1. 更新标签页按钮文字（第一个标签）
             musicListTabBar.setTabName(musicListTabBar.currentIndex, newName)
-            // 2. 更新当前菜单标题（因为 menuName 是属性绑定，需要手动修改）
             musicListMenu.menuName = newName
+        }
+    }
+
+    Connections{
+        target: musicListMenu
+        function onAddSongToPlaylistRequested(songName){
+            playerController.addToPlaylist(songName)
+            console.log("已添加至播放列表", songName)
         }
     }
 }

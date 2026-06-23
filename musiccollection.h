@@ -17,10 +17,11 @@ public:
     MusicCollection(const QString& name, QObject* parent = nullptr);
     QString name() const;
     void setName(const QString& name);
-    void addSong(Song* song);
-    void removeSong(int index);
-    QList<Song*> getAllSongs() const;
-    Song* getSong(int index) const;
+    Q_INVOKABLE void addSong(Song* song);
+    Q_INVOKABLE void removeSong(int index);
+    Q_INVOKABLE QList<Song*> getAllSongs() const;
+    Q_INVOKABLE Song* getSong(int index) const;
+    Q_INVOKABLE int count() const;
 signals:
     void nameChanged();
 private:

@@ -4,15 +4,17 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QList>
-class Song;
+#include "song.h"
 
 class SongBroker : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
+    QML_SINGLETON
 public:
     explicit SongBroker(QObject *parent = nullptr);
-    Song* findSongByUrl(const QString&& url);
+    static SongBroker* singleton();
+    Q_INVOKABLE Song* findSongByUrl(QString url);
 
 private:
     QList<Song*> m_songs;
