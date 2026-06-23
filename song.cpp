@@ -1,4 +1,5 @@
 #include "song.h"
+#include <QDebug>
 
 Song::Song(const QString& name, const QString& singer, const QString& album, const QString& url, int duration)
     : m_name(name), m_singer(singer), m_album(album), m_url(url), m_duration(duration), QObject(nullptr)
@@ -38,4 +39,5 @@ bool Song::liked() const
 void Song::setLiked(bool newLiked)
 {
     m_liked = newLiked;
+    emit likedChanged();
 }

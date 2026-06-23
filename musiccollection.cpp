@@ -17,7 +17,7 @@ void MusicCollection::setName(const QString& name)
     }
 }
 
-void MusicCollection::addSong(Song* song)
+void MusicCollection::addSong(QString song)
 {
     m_songs.append(song);
 }
@@ -29,20 +29,25 @@ void MusicCollection::removeSong(int index)
     }
 }
 
-QList<Song*> MusicCollection::getAllSongs() const
+QList<QString> MusicCollection::getAllSongs() const
 {
     return m_songs;
 }
 
-Song* MusicCollection::getSong(int index) const
+QString MusicCollection::getSong(int index) const
 {
     if (index >= 0 && index < m_songs.size()) {
         return m_songs.at(index);
     }
-    return nullptr;
+    return "";
 }
 
 int MusicCollection::count() const
 {
     return m_songs.count();
+}
+
+void MusicCollection::clear()
+{
+    m_songs.clear();
 }

@@ -6,7 +6,6 @@
 #include <QString>
 #include <QList>
 #include <QtQml/qqmlregistration.h>
-#include "song.h"
 
 class MusicCollection : public QObject
 {
@@ -17,16 +16,17 @@ public:
     MusicCollection(const QString& name, QObject* parent = nullptr);
     QString name() const;
     void setName(const QString& name);
-    Q_INVOKABLE void addSong(Song* song);
+    Q_INVOKABLE void addSong(QString song);
     Q_INVOKABLE void removeSong(int index);
-    Q_INVOKABLE QList<Song*> getAllSongs() const;
-    Q_INVOKABLE Song* getSong(int index) const;
+    Q_INVOKABLE QList<QString> getAllSongs() const;
+    Q_INVOKABLE QString getSong(int index) const;
     Q_INVOKABLE int count() const;
+    void clear();
 signals:
     void nameChanged();
 private:
     QString m_name;
-    QList<Song*> m_songs;
+    QList<QString> m_songs;
 };
 
 #endif // MUSICCOLLECTION_H

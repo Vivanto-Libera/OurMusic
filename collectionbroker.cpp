@@ -16,10 +16,10 @@ CollectionBroker::CollectionBroker(QObject *parent)
     QList<Song*> allSongs = sb->getAllSongs();
     for (const auto& song : allSongs)
     {
-        allMusic->addSong(song);
+        allMusic->addSong(song->url());
         if (song->liked())
         {
-            likedMusic->addSong(song);
+            likedMusic->addSong(song->url());
         }
     }
     m_collections.append(allMusic);
@@ -40,7 +40,7 @@ CollectionBroker::CollectionBroker(QObject *parent)
                     QJsonArray songs = collectionObj["songs"].toArray();
                     for (const QJsonValue& songObj : songs)
                     {
-                        collection->addSong(sb->findSongByUrl(songObj.toObject()["url"].toString()));
+                        collection->addSong(songObj.toObject()["url"].toString());
                     }
                     m_collections.append(collection);
                 }
@@ -96,7 +96,7 @@ void CollectionBroker::save()
             for (const auto& song : collection->getAllSongs())
             {
                 QJsonObject songUrl;
-                songUrl["url"] = song->url();
+                songUrl["url"] = song;
                 songs.append(songUrl);
             }
             obj["songs"] = songs;
@@ -105,5 +105,20 @@ void CollectionBroker::save()
         QJsonDocument doc(arr);
         QByteArray data = doc.toJson();
         file.write(data);
+    }
+}
+
+void CollectionBroker::reloadLikedMusic()
+{
+    SongBroker* sb = SongBroker::singleton();
+    MusicCollection* likedMusic = m_collections.at(1);
+    likedMusic->clear();
+    QList<Song*> allSongs = sb->getAllSongs();
+    for (const auto& song : allSongs)
+    {
+        if (sb->findSongByUrl(song->url())->liked())
+        {
+            likedMusic->addSong(song->url());
+        }
     }
 }

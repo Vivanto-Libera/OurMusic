@@ -12,12 +12,13 @@ class CollectionBroker : public QObject
     QML_SINGLETON
 public:
     explicit CollectionBroker(QObject *parent = nullptr);
-    static CollectionBroker* singleton();
+    Q_INVOKABLE static CollectionBroker* singleton();
     Q_INVOKABLE MusicCollection* findCollection(int index);
     Q_INVOKABLE void deleteCollection(int index);
     Q_INVOKABLE void createdNewCollection();
     Q_INVOKABLE int count();
     Q_INVOKABLE void save();
+    Q_INVOKABLE void reloadLikedMusic();
 
 private:
     QList<MusicCollection*> m_collections;

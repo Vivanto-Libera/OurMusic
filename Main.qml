@@ -69,18 +69,23 @@ Window {
 
     Component.onCompleted:
     {
-        for (let i = 0; i < CollectionBroker.count(); i++)
+        for (let i = 0; i < CollectionBroker.singleton().count(); i++)
         {
-            musicListTabBar.addMusicList(CollectionBroker.findCollection(i).name)
+            musicListTabBar.addMusicList(CollectionBroker.singleton().findCollection(i).name)
         }
 
         musicListTabBar.tabSelected.connect(function() {
-            let collection = CollectionBroker.findCollection(musicListTabBar.currentIndex)
+            let collection = CollectionBroker.singleton().findCollection(musicListTabBar.currentIndex)
             musicListMenu.menuName = collection.name;
             musicListMenu.clear()
+            if (musicListTabBar.currentIndex === 1)
+            {
+                CollectionBroker.singleton().reloadLikedMusic()
+            }
+
             for (let i = 0; i < collection.count(); i++)
             {
-                musicListMenu.addSong(collection.getSong(i))
+                musicListMenu.addSong(SongBroker.singleton().findSongByUrl(collection.getSong(i)))
             }
             musicListMenu.setEditable(musicListTabBar.currentIndex > 1)
         })
@@ -93,7 +98,7 @@ Window {
         function onRenameRequested(newName) {
             musicListTabBar.setTabName(musicListTabBar.currentIndex, newName)
             musicListMenu.menuName = newName
-            CollectionBroker.findCollection(musicListTabBar.currentIndex).name = newName
+            CollectionBroker.singleton().findCollection(musicListTabBar.currentIndex).name = newName
         }
     }
 
@@ -106,7 +111,7 @@ Window {
 
     onClosing: function()
     {
-        CollectionBroker.save()
-        SongBroker.save()
+        CollectionBroker.singleton().save()
+        SongBroker.singleton().save()
     }
 }

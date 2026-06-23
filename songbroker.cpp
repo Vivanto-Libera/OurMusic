@@ -58,6 +58,12 @@ QList<Song *> SongBroker::getAllSongs()
     return m_songs;
 }
 
+void SongBroker::setSongLiked(QString url, bool liked)
+{
+    findSongByUrl(url)->setLiked(liked);
+    qDebug() << this;
+}
+
 void SongBroker::save()
 {
     QFile file("songdata.json");
