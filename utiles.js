@@ -1,12 +1,11 @@
 function trans(duration) {
-    duration = parseInt(duration / 1000)
-    let duratoinString
-    let seconds
-    let minutes
-    minutes = parseInt(duration / 60)
-    seconds = duration - minutes * 60
-    let minStr = minutes.toString().padStart(2, "0")
-    let secStr = seconds.toString().padStart(2, "0")
-    duratoinString = minStr + ":" + secStr
-    return duratoinString
+    if (isNaN(duration) || duration < 0 || !isFinite(duration)) {
+        return "00:00"
+    }
+    let totalSeconds = Math.floor(duration / 1000)
+    let minutes = Math.floor(totalSeconds / 60)
+    let seconds = totalSeconds - minutes * 60
+    let minStr = minutes < 10 ? "0" + minutes : "" + minutes
+    let secStr = seconds < 10 ? "0" + seconds : "" + seconds
+    return minStr + ":" + secStr
 }

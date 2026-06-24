@@ -16,6 +16,8 @@ Rectangle {
     property alias durationText : duration.text
     property alias positionText : position.text
 
+    property int lastDisplayedSecond: -1
+
     property string currentSongName: PlayList.currentIndex >= 0 ? PlayList.getName(PlayList.currentIndex) : ""
 
     // MediaPlayer组件用于播放音乐
@@ -31,8 +33,14 @@ Rectangle {
         }
 
         onPositionChanged: {
-            positionText = Utiles.trans(mediaPlayer.position)
-            slider.value = mediaPlayer.duration > 0 ? mediaPlayer.position / mediaPlayer.duration : 0
+            let currentSecond = Math.floor(mediaPlayer.position / 1000)
+            if (currentSecond !== lastDisplayedSecond) {
+                lastDisplayedSecond = currentSecond
+                positionText = Utiles.trans(mediaPlayer.position)
+            }
+            if (mediaPlayer.duration > 0) {
+                slider.value = mediaPlayer.position / mediaPlayer.duration
+            }
         }
 
         onPlaybackStateChanged: {
@@ -62,6 +70,8 @@ Rectangle {
             PlayList.currentIndex = index
             let url = PlayList.getUrl(index)
             currentSongName = PlayList.getName(index)
+            lastDisplayedSecond = -1
+            positionText = "00:00"
             mediaPlayer.source = url
             mediaPlayer.play()
         }
@@ -80,6 +90,9 @@ Rectangle {
     // 停止
     function stopMusic() {
         mediaPlayer.stop()
+        lastDisplayedSecond = -1
+        positionText = "00:00"
+        slider.value = 0
     }
 
     // 上一曲
@@ -296,7 +309,10 @@ Rectangle {
                 Layout.preferredWidth: 260
                 Layout.preferredHeight: 16
                 onMoved: {
-                    mediaPlayer.position = slider.value * mediaPlayer.duration
+                    if (pressed)
+                    {
+                        mediaPlayer.position = slider.value * mediaPlayer.duration
+                    }
                 }
                 background: Rectangle {
                     implicitHeight: 4
