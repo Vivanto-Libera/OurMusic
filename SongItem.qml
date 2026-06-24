@@ -98,6 +98,7 @@ Rectangle {
                 width: 32
                 height: 32
                 icon.source: checked ? "qrc:/icons/like_red.svg" : "qrc:/icons/like_empty.svg"
+                icon.color: checked ? "red" : "transparent"
                 checkable: true
                 background: Rectangle {
                     color: likeBtn.pressed ? "#e2e8f0" : "transparent"

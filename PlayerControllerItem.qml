@@ -15,7 +15,7 @@ Rectangle {
     // 播放模式枚举
     property int playMode: 0
     // 当前播放歌曲的url
-    property string currentSongUrl: "test.mp3"
+    property string currentSongUrl: ""
     // 播放列表
     property ListModel playlistModel: ListModel{}
 
@@ -57,6 +57,7 @@ Rectangle {
             Button {
                 id: like
                 icon.source: checked ? "qrc:/icons/like_red.svg" : "qrc:/icons/like_empty.svg"
+                icon.color: checked ? "red" : "transparent"
                 checkable: true
                 icon.width: 26
                 icon.height: 26
