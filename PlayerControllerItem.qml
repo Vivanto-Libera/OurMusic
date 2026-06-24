@@ -2,30 +2,142 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
+import "utiles.js" as Utiles
+import OurMusic
 
 Rectangle {
-    id: rectangle
+    id: root
     width: 500
     height: 105
     color: "#ffffff"
     radius: 12
     border.color: "#dddddd"
     border.width: 1
+    property alias durationText : duration.text
+    property alias positionText : position.text
 
-    // 播放模式枚举
-    property int playMode: 0
+    property string currentSongName: PlayList.currentIndex >= 0 ? PlayList.getName(PlayList.currentIndex) : ""
 
-    // 播放列表
-    property ListModel playlistModel: ListModel{}
-    // 添加歌曲到播放列表
-    function addToPlaylist(songName){
-        playlistModel.append({"songName" : songName})
+    // MediaPlayer组件用于播放音乐
+    MediaPlayer {
+        id: mediaPlayer
+        audioOutput: AudioOutput {
+            volume: volumeSlider.value
+        }
+        autoPlay: false
+
+        onDurationChanged: {
+            durationText = Utiles.trans(mediaPlayer.duration)
+        }
+
+        onPositionChanged: {
+            positionText = Utiles.trans(mediaPlayer.position)
+            slider.value = mediaPlayer.duration > 0 ? mediaPlayer.position / mediaPlayer.duration : 0
+        }
+
+        onPlaybackStateChanged: {
+            if (mediaPlayer.status === MediaPlayer.EndOfMedia) {
+                nextMusic()
+            }
+        }
     }
 
-    // 左侧歌曲名称 - 向右移动
+    // 设置播放URL并播放（通过URL）
+    function setUrl(url) {
+        mediaPlayer.source = url
+        mediaPlayer.play()
+    }
+
+    // 设置播放列表
+    function setPlaylist(songs) {
+        PlayList.clear()
+        for (let i = 0; i < songs.length; i++) {
+            PlayList.addSong(songs[i].name, songs[i].url)
+        }
+    }
+
+    // 设置播放列表并从指定索引开始播放
+    function playAtIndex(index) {
+        if (index >= 0 && index < PlayList.count()) {
+            PlayList.currentIndex = index
+            let url = PlayList.getUrl(index)
+            currentSongName = PlayList.getName(index)
+            mediaPlayer.source = url
+            mediaPlayer.play()
+        }
+    }
+
+    // 播放当前歌曲
+    function playMusic() {
+        mediaPlayer.play()
+    }
+
+    // 暂停
+    function pauseMusic() {
+        mediaPlayer.pause()
+    }
+
+    // 停止
+    function stopMusic() {
+        mediaPlayer.stop()
+    }
+
+    // 上一曲
+    function previousMusic() {
+        let playlist = PlayList
+        if (playlist.count() === 0) return
+        
+        let newIndex = playlist.previousIndex()
+        if (newIndex >= 0) {
+            playAtIndex(newIndex)
+        }
+    }
+
+    // 下一曲
+    function nextMusic() {
+        let playlist = PlayList
+        if (playlist.count() === 0) return
+        
+        let newIndex = playlist.nextIndex()
+        if (newIndex >= 0) {
+            playAtIndex(newIndex)
+        }
+    }
+
+    // 添加歌曲到播放列表
+    function addToPlaylist(songName, url) {
+        PlayList.addSong(songName, url)
+    }
+
+    // 清空播放列表
+    function clearPlaylist() {
+        PlayList.clear()
+    }
+
+    // 删除播放列表中的歌曲
+    function removeFromPlaylist(index) {
+        PlayList.deleteSong(index)
+    }
+
+    // 获取当前播放列表索引
+    function getCurrentIndex() {
+        return PlayList.currentIndex
+    }
+
+    // 获取播放模式
+    function getPlayMode() {
+        return PlayList.playMode
+    }
+
+    // 设置播放模式
+    function setPlayMode(mode) {
+        PlayList.setPlayMode(mode)
+    }
+
+    // 左侧歌曲名称
     Text {
         id: name
-        text: "Name"
+        text: currentSongName
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.right: columnLayout.left
@@ -57,8 +169,7 @@ Rectangle {
                 flat: true
                 implicitWidth: 42
                 implicitHeight: 42
-                // 添加悬停文本提示
-                ToolTip{
+                ToolTip {
                     visible: like.hovered
                     text: "喜欢"
                     delay: 500
@@ -73,8 +184,10 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
-                // 添加悬停文本提示
-                ToolTip{
+                onClicked: {
+                    previousMusic()
+                }
+                ToolTip {
                     visible: previous.hovered
                     text: "上一曲"
                     delay: 500
@@ -83,7 +196,7 @@ Rectangle {
 
             Button {
                 id: play
-                icon.source: "qrc:/icons/play.svg"
+                icon.source: mediaPlayer.playing ? "qrc:/icons/pause.svg" : "qrc:/icons/play.svg"
                 icon.width: 32
                 icon.height: 32
                 background: Rectangle {
@@ -92,10 +205,16 @@ Rectangle {
                 }
                 implicitWidth: 54
                 implicitHeight: 54
-                // 添加悬停文本提示
-                ToolTip{
+                onClicked: {
+                    if (mediaPlayer.playing) {
+                        mediaPlayer.pause()
+                    } else {
+                        mediaPlayer.play()
+                    }
+                }
+                ToolTip {
                     visible: play.hovered
-                    text: "播放/暂停"
+                    text: mediaPlayer.playing ? "暂停" : "播放"
                     delay: 500
                 }
             }
@@ -108,8 +227,10 @@ Rectangle {
                 icon.height: 28
                 implicitWidth: 46
                 implicitHeight: 46
-                // 添加悬停文本提示
-                ToolTip{
+                onClicked: {
+                    nextMusic()
+                }
+                ToolTip {
                     visible: next.hovered
                     text: "下一曲"
                     delay: 500
@@ -123,26 +244,24 @@ Rectangle {
                 icon.height: 26
                 implicitWidth: 42
                 implicitHeight: 42
-                // 根据不同的playMode变换图标, 0对应循环播放, 1对应单曲循环, 2对应随机播放
                 icon.source: {
-                    switch(playMode){
+                    switch(PlayList.playMode){
                         case 0: return "qrc:/icons/play_cycle.svg"
                         case 1: return "qrc:/icons/play_once.svg"
                         case 2: return "qrc:/icons/random.svg"
                     }
                 }
-                // 点击图标切换playMode
                 onClicked: {
-                    playMode = (playMode + 1)%3
-                    loop_mode.modeChanged(playMode)
+                    let newMode = (PlayList.playMode + 1) % 3
+                    PlayList.setPlayMode(newMode)
+                    loop_mode.modeChanged(newMode)
                 }
                 signal modeChanged(int mode)
 
-                // 指针悬停显示当前playMode
-                ToolTip{
+                ToolTip {
                     visible: loop_mode.hovered
                     text: {
-                        switch(playMode){
+                        switch(PlayList.playMode){
                         case 0: return "列表循环"
                         case 1: return "单曲循环"
                         case 2: return "随机循环"
@@ -171,11 +290,14 @@ Rectangle {
             Slider {
                 id: slider
                 width: 260
-                value: 0.5
+                value: 0
                 snapMode: RangeSlider.NoSnap
                 live: true
                 Layout.preferredWidth: 260
                 Layout.preferredHeight: 16
+                onMoved: {
+                    mediaPlayer.position = slider.value * mediaPlayer.duration
+                }
                 background: Rectangle {
                     implicitHeight: 4
                     radius: 2
@@ -227,8 +349,7 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
-            // 添加悬停文本提示
-            ToolTip{
+            ToolTip {
                 visible: collect.hovered
                 text: "收藏"
                 delay: 500
@@ -245,12 +366,10 @@ Rectangle {
             implicitWidth: 40
             implicitHeight: 40
 
-            // 新增：记录非零音量（用于双击恢复）
             property real previousVolume: 0.5
 
             onClicked: volumePopup.open()
 
-            // 新增：双击切换静音/恢复
             onDoubleClicked: {
                 if (volumeSlider.value > 0) {
                     previousVolume = volumeSlider.value
@@ -262,7 +381,7 @@ Rectangle {
 
             Popup {
                 id: volumePopup
-                x:  (volume.width - volumePopup.width) / 2
+                x: (volume.width - volumePopup.width) / 2
                 y: -height - 10
                 width: 70
                 height: 190
@@ -334,7 +453,7 @@ Rectangle {
                 delay: 500
             }
         }
-        // 播放列表按钮
+
         Button {
             id: music_menu
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
@@ -344,8 +463,7 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
-            // 添加悬停文本提示
-            ToolTip{
+            ToolTip {
                 visible: music_menu.hovered
                 text: "播放列表"
                 delay: 500
@@ -353,8 +471,9 @@ Rectangle {
             onClicked: playlistDialog.open()
         }
     }
-    // 点击播放列表弹出的对话框
-    Dialog{
+
+    // 播放列表对话框
+    Dialog {
         id: playlistDialog
         title: ""
         modal: true
@@ -364,7 +483,6 @@ Rectangle {
         width: 200
         height: 300
 
-        // 自定义标题栏
         header: Rectangle {
             height: 50
             color: "#f5f5f5"
@@ -373,7 +491,6 @@ Rectangle {
             RowLayout {
                 anchors.fill: parent
                 anchors.margins: 10
-                // 标题文本
                 Text {
                     id: playListText
                     text: "当前播放列表"
@@ -385,58 +502,104 @@ Rectangle {
             }
         }
 
-        contentItem: ColumnLayout{
+        contentItem: ColumnLayout {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: playListText.bottom
             anchors.margins: 8
-            // 列表显示区域
-            ListView{
+
+            ListView {
                 id: playlistListView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                model: playlistModel
 
-                delegate: Rectangle{
+                model: ListModel {
+                    id: playlistProxyModel
+                }
+
+                delegate: Rectangle {
                     width: playlistListView.width
                     height: 40
-                    color: index % 2 === 0 ? "#f8f8f8" : "white"
+                    color: index === PlayList.currentIndex ? "#e84c3d" : (index % 2 === 0 ? "#f8f8f8" : "white")
 
-                    RowLayout{
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            playAtIndex(index)
+                            playlistDialog.close()
+                        }
+                    }
+
+                    RowLayout {
                         anchors.fill: parent
                         anchors.margins: 4
                         spacing: 8
-                        // 歌曲名称
-                        Text{
+
+                        Image {
+                            source: "qrc:/icons/play_black.svg"
+                            width: 16
+                            height: 16
+                            visible: index === PlayList.currentIndex
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+
+                        Text {
                             text: model.songName
                             anchors.left: parent.left
-                            anchors.leftMargin: 12
+                            anchors.leftMargin: index === PlayList.currentIndex ? 28 : 12
                             anchors.verticalCenter: parent.verticalCenter
                             font.pixelSize: 14
+                            color: index === PlayList.currentIndex ? "white" : "#333333"
                         }
-                        // 按钮：从列表中删除
-                        Button{
+
+                        Button {
                             id: delBtn
                             anchors.right: parent.right
                             icon.source: "qrc:/icons/delete.svg"
-                            background: Rectangle{
+                            background: Rectangle {
                                 color: "transparent"
                             }
                             onClicked: {
-                                playlistModel.remove(index)
+                                PlayList.deleteSong(index)
+                                updatePlaylistProxy()
                             }
                         }
                     }
                 }
             }
         }
+
+        onOpened: {
+            updatePlaylistProxy()
+        }
     }
-    Component.onCompleted: {
-        // 添加测试歌曲到播放列表
-        playlistModel.append({"songName": "起风了"})
-        playlistModel.append({"songName": "稻香"})
-        playlistModel.append({"songName": "晴天"})
-        playlistModel.append({"songName": "夜曲"})
-        playlistModel.append({"songName": "七里香"})
+
+    // 更新播放列表代理模型
+    function updatePlaylistProxy() {
+        playlistProxyModel.clear()
+        let playlist = PlayList
+        for (let i = 0; i < playlist.count(); i++) {
+            playlistProxyModel.append({
+                "songName": playlist.getName(i),
+                "url": playlist.getUrl(i)
+            })
+        }
+    }
+
+    // 监听播放列表变化
+    Connections {
+        target: PlayList
+        function onSongAdded() {
+            updatePlaylistProxy()
+        }
+        function onSongRemoved() {
+            updatePlaylistProxy()
+        }
+        function onListCleared() {
+            updatePlaylistProxy()
+        }
+        function onCurrentIndexChanged() {
+            currentSongName = PlayList.currentIndex >= 0 ? PlayList.getName(PlayList.currentIndex) : ""
+        }
     }
 }

@@ -1,4 +1,5 @@
 function trans(duration) {
+    duration = parseInt(duration / 1000)
     let duratoinString
     let seconds
     let minutes

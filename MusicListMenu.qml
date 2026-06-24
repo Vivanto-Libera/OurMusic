@@ -15,7 +15,8 @@ Item {
     signal deletePlaylist()
     signal addSongRequested()
     signal renameRequested(string name)
-    signal addSongToPlaylistRequested(string songName)
+    signal addSongToPlaylistRequested(string songName, string url)
+    signal playSongRequested(string url, string songName)
 
     Text {
         id: name
@@ -131,8 +132,12 @@ Item {
                 url: model.url
                 width: root.width - 16
 
+                onPlayClicked: {
+                    root.playSongRequested(model.url, model.name)
+                }
+
                 onAddToPlaylistClicked: {
-                    root.addSongToPlaylistRequested(model.name)
+                    root.addSongToPlaylistRequested(model.name, model.url)
                 }
             }
         }
