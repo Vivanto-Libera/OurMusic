@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtMultimedia
 
 Rectangle {
-    id: rectangle
+    id: root
     width: 500
     height: 105
     color: "#ffffff"
@@ -14,9 +14,15 @@ Rectangle {
 
     // 播放模式枚举
     property int playMode: 0
-
+    // 当前播放歌曲的url
+    property string currentSongUrl: "test.mp3"
     // 播放列表
     property ListModel playlistModel: ListModel{}
+
+    // 喜欢
+    signal likeToggled(string url, bool liked)
+    // 收藏
+    signal collectRequested(string url)
     // 添加歌曲到播放列表
     function addToPlaylist(songName){
         playlistModel.append({"songName" : songName})
@@ -57,6 +63,11 @@ Rectangle {
                 flat: true
                 implicitWidth: 42
                 implicitHeight: 42
+
+                onClicked: {
+                    root.likeToggled(root.currentSongUrl, checked)
+                }
+
                 // 添加悬停文本提示
                 ToolTip{
                     visible: like.hovered
@@ -227,6 +238,11 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
+
+            onClicked: {
+                root.collectRequested(root.currentSongUrl)
+            }
+
             // 添加悬停文本提示
             ToolTip{
                 visible: collect.hovered

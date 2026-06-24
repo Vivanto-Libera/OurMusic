@@ -19,7 +19,9 @@ void MusicCollection::setName(const QString& name)
 
 void MusicCollection::addSong(QString song)
 {
-    m_songs.append(song);
+    if (!m_songs.contains(song)) {
+        m_songs.append(song);
+    }
 }
 
 void MusicCollection::removeSong(int index)

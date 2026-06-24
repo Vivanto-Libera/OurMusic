@@ -120,6 +120,13 @@ Window {
         }
     }
 
+    Connections {
+        target: playerController
+        function onCollectRequested(url) {
+            musicListMenu.openCollectionSelector(url)
+        }
+    }
+
     onClosing: function()
     {
         CollectionBroker.singleton().save()
