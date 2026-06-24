@@ -18,7 +18,7 @@ Rectangle {
     signal playClicked()
     signal editClicked()
     signal likeClicked(bool liked)
-    signal addToPlaylistClicked()
+    signal addToPlaylistClicked(string url)
     signal deleteClicked()
     signal collected()
 
@@ -126,7 +126,7 @@ Rectangle {
                     color: addBtn.pressed ? "#e2e8f0" : "transparent"
                     radius: 16
                 }
-                onClicked: root.addToPlaylistClicked()
+                onClicked: root.addToPlaylistClicked(root.url)
                 // 添加悬停文本提示
                 ToolTip{
                     visible: addBtn.hovered

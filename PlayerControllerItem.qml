@@ -24,8 +24,24 @@ Rectangle {
     // 收藏
     signal collectRequested(string url)
     // 添加歌曲到播放列表
-    function addToPlaylist(songName){
-        playlistModel.append({"songName" : songName})
+    function addToPlaylist(songName, url) {
+        if (!url || url === "") {
+            console.warn("Cannot add song with empty URL.")
+            return
+        }
+        // 查找是否已存在
+        for (var i = 0; i < playlistModel.count; i++) {
+            if (playlistModel.get(i).url === url) {
+                if (i !== 0) {
+                    playlistModel.move(i, 0, 1)   // 移动到最前
+                    console.log("Moved existing song to top:", songName)
+                }
+                return
+            }
+        }
+        // 不存在，追加
+        playlistModel.append({"songName": songName, "url": url})
+        console.log("Added new song to playlist:", songName)
     }
 
     // 左侧歌曲名称 - 向右移动
@@ -449,11 +465,6 @@ Rectangle {
         }
     }
     Component.onCompleted: {
-        // 添加测试歌曲到播放列表
-        playlistModel.append({"songName": "起风了"})
-        playlistModel.append({"songName": "稻香"})
-        playlistModel.append({"songName": "晴天"})
-        playlistModel.append({"songName": "夜曲"})
-        playlistModel.append({"songName": "七里香"})
+
     }
 }

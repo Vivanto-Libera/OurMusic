@@ -16,7 +16,7 @@ Item {
     signal deletePlaylist()
     signal addSongRequested()
     signal renameRequested(string name)
-    signal addSongToPlaylistRequested(string songName)
+    signal addSongToPlaylistRequested(string songName, string url)
 
     Text {
         id: name
@@ -133,7 +133,7 @@ Item {
                 width: root.width - 16
 
                 onAddToPlaylistClicked: {
-                    root.addSongToPlaylistRequested(model.name)
+                    root.addSongToPlaylistRequested(model.name, model.url)
                 }
 
                 onCollected: {
@@ -144,6 +144,10 @@ Item {
     }
 
     function addSong(song) {
+        if (!song || !song.url || song.url === "") {
+            console.warn("Invalid song or empty URL, skip adding.")
+            return
+        }
         songModel.append({
             "name": song.name,
             "album": song.album,

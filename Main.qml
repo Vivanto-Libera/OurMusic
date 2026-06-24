@@ -70,36 +70,47 @@ Window {
 
     Component.onCompleted:
     {
-        for (let i = 0; i < CollectionBroker.singleton().count(); i++)
-        {
-            musicListTabBar.addMusicList(CollectionBroker.singleton().findCollection(i).name)
+        // 添加所有歌单到侧边栏
+        var broker = CollectionBroker.singleton()
+        for (var i = 0; i < broker.count(); i++) {
+            var collection = broker.findCollection(i)
+            if (collection) {
+                musicListTabBar.addMusicList(collection.name)
+            }
         }
 
+        // 连接tabSelected信号，用于切换歌单时刷新歌曲列表
         musicListTabBar.tabSelected.connect(function() {
-            let collection = CollectionBroker.singleton().findCollection(musicListTabBar.currentIndex)
-            musicListMenu.menuName = collection.name;
+            var collection = broker.findCollection(musicListTabBar.currentIndex)
+            if (!collection) return
+
+            musicListMenu.menuName = collection.name
             musicListMenu.clear()
-            if (musicListTabBar.currentIndex === 1)
-            {
-                CollectionBroker.singleton().reloadLikedMusic()
+            // 刷新“我喜欢的音乐”和“全部音乐”
+            if (musicListTabBar.currentIndex === 1) {
+                broker.reloadLikedMusic()
             }
-            if (musicListTabBar.currentIndex === 0)
-            {
-                CollectionBroker.singleton().reloadAllMusic()
+            else if (musicListTabBar.currentIndex === 0) {
+                broker.reloadAllMusic()
+            }
+            // song判空
+            for (var j = 0; j < collection.count(); j++) {
+                var songUrl = collection.getSong(j)
+                var song = SongBroker.singleton().findSongByUrl(songUrl)
+                if (song) {
+                    musicListMenu.addSong(song)
+                }
             }
 
-            for (let i = 0; i < collection.count(); i++)
-            {
-                musicListMenu.addSong(SongBroker.singleton().findSongByUrl(collection.getSong(i)))
-            }
             musicListMenu.setEditable(musicListTabBar.currentIndex > 1)
             musicListMenu.currentCollectionIndex = musicListTabBar.currentIndex
         })
+
+        // 默认选中第一个歌单
         musicListTabBar.setCurrentIndex(0)
         musicListTabBar.tabSelected()
-
-        musicListTabBar.songAdded.connect(function(filePath)
-        {
+        // 导入歌曲信号
+        musicListTabBar.songAdded.connect(function(filePath) {
             SongBroker.singleton().addSong(filePath)
         })
     }
@@ -115,8 +126,8 @@ Window {
 
     Connections{
         target: musicListMenu
-        function onAddSongToPlaylistRequested(songName){
-            playerController.addToPlaylist(songName)
+        function onAddSongToPlaylistRequested(songName, url){
+            playerController.addToPlaylist(songName, url)
         }
     }
 
