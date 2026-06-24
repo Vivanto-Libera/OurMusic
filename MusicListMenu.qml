@@ -471,5 +471,27 @@ Item {
                 collectionListModel.append({"name": coll.name, "index": i})
             }
         }
-    }
+
+        Connections {
+                target: musicListMenu
+                function onDeletePlaylist() {
+                    let broker = CollectionBroker.singleton()
+                    let index = musicListTabBar.currentIndex
+                    if (index > 1) {
+                        broker.deleteCollection(index)
+                        musicListTabBar.tabModel.remove(index)
+                        musicListTabBar.setCurrentIndex(0)
+                        musicListTabBar.tabSelected()
+                    } else {
+                        console.warn("不能删除内置歌单")
+                    }
+                }
+            }
+
+            onClosed: function()
+            {
+                CollectionBroker.singleton().save()
+                SongBroker.singleton().save()
+            }
+      }
 }
