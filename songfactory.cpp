@@ -55,5 +55,5 @@ Song* SongFactory::buildSong(const QString& url)
         album = "Unknown Album";
     }
     
-    return new Song(name, singer, album, url, duration / 1000);
+    return new Song(name, singer, album, url, duration);
 }

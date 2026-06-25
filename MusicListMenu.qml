@@ -17,6 +17,8 @@ Item {
     signal addSongRequested()
     signal renameRequested(string name)
     signal addSongToPlaylistRequested(string songName, string url)
+    signal playSongRequested(string url, string songName)
+
 
     Text {
         id: name
@@ -131,6 +133,10 @@ Item {
                 isLiked: model.isLiked
                 url: model.url
                 width: root.width - 16
+
+                onPlayClicked: {
+                    root.playSongRequested(model.url, model.name)
+                }
 
                 onAddToPlaylistClicked: {
                     root.addSongToPlaylistRequested(model.name, model.url)
@@ -434,12 +440,12 @@ Item {
                         hoverEnabled: true
                         onClicked: {
                             if (model.index >= 0 && root.pendingSongUrl !== "") {
-                                var target = CollectionBroker.singleton().findCollection(model.index)
+                                let target = CollectionBroker.singleton().findCollection(model.index)
                                 if (target) {
                                     target.addSong(root.pendingSongUrl)
                                     // 如果当前显示的歌单就是目标，刷新 UI
                                     if (model.index === root.currentCollectionIndex) {
-                                        var song = SongBroker.singleton().findSongByUrl(root.pendingSongUrl)
+                                        let song = SongBroker.singleton().findSongByUrl(root.pendingSongUrl)
                                         if (song) {
                                             root.addSong(song)
                                         }

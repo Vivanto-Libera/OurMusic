@@ -112,6 +112,7 @@ Window {
         // 导入歌曲信号
         musicListTabBar.songAdded.connect(function(filePath) {
             SongBroker.singleton().addSong(filePath)
+            SongBroker.singleton().save()
         })
     }
 
@@ -131,6 +132,23 @@ Window {
         }
     }
 
+    Connections{
+        target: musicListMenu
+        function onPlaySongRequested(url, songName){
+            let collection = CollectionBroker.singleton().findCollection(musicListTabBar.currentIndex)
+            let songs = []
+            for (let i = 0; i < collection.count(); i++) {
+                let songUrl = collection.getSong(i)
+                let song = SongBroker.singleton().findSongByUrl(songUrl)
+                if (song) {
+                    songs.push({"name": song.name, "url": song.url})
+                }
+            }
+            playerController.setPlaylist(songs)
+            let index = songs.findIndex(function(s) { return s.url === url })
+            playerController.playAtIndex(index)
+        }
+    }
     Connections {
         target: playerController
         function onCollectRequested(url) {
