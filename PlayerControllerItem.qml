@@ -44,7 +44,7 @@ Rectangle {
         }
 
         onPlaybackStateChanged: {
-            if (mediaPlayer.status === MediaPlayer.EndOfMedia) {
+            if (mediaPlayer.position === mediaPlayer.duration) {
                 nextMusic()
             }
         }
@@ -270,7 +270,7 @@ Rectangle {
                 }
                 onClicked: {
                     let newMode = (PlayList.playMode + 1) % 3
-                    PlayList.setPlayMode(newMode)
+                    PlayList.playMode = newMode
                     loop_mode.modeChanged(newMode)
                 }
                 signal modeChanged(int mode)
@@ -549,9 +549,8 @@ Rectangle {
                     height: 40
                     color: index === PlayList.currentIndex ? "#e84c3d" : (index % 2 === 0 ? "#f8f8f8" : "white")
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
+                    TapHandler {
+                        onTapped: {
                             playAtIndex(index)
                             playlistDialog.close()
                         }
