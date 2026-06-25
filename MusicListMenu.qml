@@ -11,12 +11,14 @@ Item {
     property ListModel songModel: ListModel{}
     property bool editable: true
     property int currentCollectionIndex: 0
+    property string pendingSongUrl: ""
 
     signal deletePlaylist()
     signal addSongRequested()
     signal renameRequested(string name)
     signal addSongToPlaylistRequested(string songName, string url)
     signal playSongRequested(string url, string songName)
+
 
     Text {
         id: name
@@ -139,13 +141,27 @@ Item {
                 onAddToPlaylistClicked: {
                     root.addSongToPlaylistRequested(model.name, model.url)
                 }
+
+                onCollected: {
+                    root.openCollectionSelector(url)
+                }
             }
         }
     }
 
-    function addSong(song)
-    {
-        songModel.append({"name": song.name, "album": song.album, "singer": song.singer, "duration": Utiles.trans(song.duration), "isLiked": song.liked, "url": song.url})
+    function addSong(song) {
+        if (!song || !song.url || song.url === "") {
+            console.warn("Invalid song or empty URL, skip adding.")
+            return
+        }
+        songModel.append({
+            "name": song.name,
+            "album": song.album,
+            "singer": song.singer,
+            "duration": Utiles.trans(song.duration),
+            "isLiked": song.liked,
+            "url": song.url
+        })
     }
 
     function clear()
@@ -162,10 +178,15 @@ Item {
         }
     }
 
+    function openCollectionSelector(url) {
+        pendingSongUrl = url
+        collectionSelectorDialog.open()
+    }
+
     ListModel {
         id: songSelectionModel
     }
-
+    // 对话框：添加歌曲
     Dialog {
         id: addSongDialog
         title: "选择要添加的歌曲"
@@ -299,7 +320,7 @@ Item {
             }
         }
     }
-
+    // 对话框：重命名歌单
     Dialog {
         id: renameDialog
         title: ""
@@ -356,5 +377,105 @@ Item {
                     root.renameRequested(newName)
                 }
             }
+    }
+    // 对话框：选择歌单
+    Dialog {
+        id: collectionSelectorDialog
+        title: "选择要加入的歌单"
+        modal: true
+        width: 300
+        height: 400
+        anchors.centerIn: parent
+
+        background: Rectangle {
+            color: "white"
+            radius: 10
+            border.color: "#e0e0e0"
+            border.width: 1
+        }
+
+        header: Rectangle {
+            height: 40
+            color: "#f5f5f5"
+            radius: 10
+            clip: true
+            Text {
+                text: "选择要加入的歌单"
+                font.pixelSize: 16
+                font.bold: true
+                color: "#333333"
+                anchors.centerIn: parent
+            }
+        }
+
+        contentItem: Item {
+            anchors.fill: parent
+
+            ListView {
+                id: collectionListView
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                    top: parent.top
+                    topMargin: collectionSelectorDialog.header.height
+                }
+                clip: true
+                model: ListModel { id: collectionListModel }
+
+                delegate: Rectangle {
+                    width: parent.width
+                    height: 40
+                    color: mouseArea.containsMouse ? "#f0f0f0" : "white"
+
+                    Text {
+                        text: model.name
+                        anchors.centerIn: parent
+                        font.pixelSize: 16
+                        color: "#222222"
+                    }
+                    MouseArea {
+                        id: mouseArea
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {
+                            if (model.index >= 0 && root.pendingSongUrl !== "") {
+                                let target = CollectionBroker.singleton().findCollection(model.index)
+                                if (target) {
+                                    target.addSong(root.pendingSongUrl)
+                                    // 如果当前显示的歌单就是目标，刷新 UI
+                                    if (model.index === root.currentCollectionIndex) {
+                                        let song = SongBroker.singleton().findSongByUrl(root.pendingSongUrl)
+                                        if (song) {
+                                            root.addSong(song)
+                                        }
+                                    }
+                                }
+                            }
+                            collectionSelectorDialog.close()
+                        }
+                    }
+                }
+
+                // 空状态提示
+                Text {
+                    anchors.centerIn: parent
+                    text: "暂无自定义歌单\n请先创建歌单"
+                    color: "#999999"
+                    font.pixelSize: 14
+                    horizontalAlignment: Text.AlignHCenter
+                    visible: collectionListModel.count === 0
+                }
+            }
+        }
+
+        onOpened: {
+            collectionListModel.clear()
+            var count = CollectionBroker.singleton().count()
+            for (var i = 2; i < count; i++) {
+                var coll = CollectionBroker.singleton().findCollection(i)
+                collectionListModel.append({"name": coll.name, "index": i})
+            }
+        }
     }
 }

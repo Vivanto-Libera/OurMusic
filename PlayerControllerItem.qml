@@ -15,10 +15,10 @@ Rectangle {
     border.width: 1
     property alias durationText : duration.text
     property alias positionText : position.text
-
     property int lastDisplayedSecond: -1
-
+    property string currentSongUrl : ""
     property string currentSongName: PlayList.currentIndex >= 0 ? PlayList.getName(PlayList.currentIndex) : ""
+    signal collectRequested(string url)
 
     // MediaPlayer组件用于播放音乐
     MediaPlayer {
@@ -54,6 +54,7 @@ Rectangle {
     function setUrl(url) {
         mediaPlayer.source = url
         mediaPlayer.play()
+        root.currentSongUrl = url
     }
 
     // 设置播放列表
@@ -73,6 +74,7 @@ Rectangle {
             lastDisplayedSecond = -1
             positionText = "00:00"
             mediaPlayer.source = url
+            currentSongUrl = url
             mediaPlayer.play()
         }
     }
@@ -176,12 +178,14 @@ Rectangle {
             Button {
                 id: like
                 icon.source: checked ? "qrc:/icons/like_red.svg" : "qrc:/icons/like_empty.svg"
+                icon.color: checked ? "red" : "transparent"
                 checkable: true
                 icon.width: 26
                 icon.height: 26
                 flat: true
                 implicitWidth: 42
                 implicitHeight: 42
+
                 ToolTip {
                     visible: like.hovered
                     text: "喜欢"
@@ -365,7 +369,14 @@ Rectangle {
             icon.height: 24
             implicitWidth: 40
             implicitHeight: 40
-            ToolTip {
+
+            onClicked: {
+                root.collectRequested(root.currentSongUrl)
+                console.log(root.currentSongUrl)
+            }
+
+            // 添加悬停文本提示
+            ToolTip{
                 visible: collect.hovered
                 text: "收藏"
                 delay: 500

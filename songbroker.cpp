@@ -45,6 +45,9 @@ SongBroker *SongBroker::singleton()
 
 void SongBroker::addSong(QString url)
 {
+    if (findSongByUrl(url) != nullptr) {
+        return;
+    }
     SongFactory factory;
     Song* song = factory.buildSong(std::move(url));
     if (song) {
