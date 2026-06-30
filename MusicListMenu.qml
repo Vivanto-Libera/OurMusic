@@ -18,6 +18,7 @@ Item {
     signal renameRequested(string name)
     signal addSongToPlaylistRequested(string songName, string url)
     signal playSongRequested(string url, string songName)
+    signal deleteRequested(string url)
 
 
     Text {
@@ -144,6 +145,9 @@ Item {
 
                 onCollected: {
                     root.openCollectionSelector(url)
+                }
+                onDeleteClicked: {
+                    root.deleteRequested(model.url)
                 }
             }
         }

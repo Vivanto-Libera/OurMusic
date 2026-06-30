@@ -91,6 +91,64 @@ Window {
         musicListMenu.currentCollectionIndex = musicListTabBar.currentIndex
     }
 
+    function handleDeleteSong(url) {
+        var broker = CollectionBroker.singleton()
+        var currentIndex = musicListTabBar.currentIndex
+        var currentCollection = null
+
+        if (currentIndex === 0) {
+            // 全部音乐：彻底删除
+            var allSongs = SongBroker.singleton().getAllSongs()
+            var found = false
+            for (var i = 0; i < allSongs.length; i++) {
+                if (allSongs[i].url === url) {
+                    found = true
+                    break
+                }
+            }
+            if (!found) return
+
+            // 从所有歌单中移除
+            for (var idx = 0; idx < broker.count(); idx++) {
+                var coll = broker.findCollection(idx)
+                if (coll) {
+                    coll.removeSongByUrl(url)
+                }
+            }
+            SongBroker.singleton().removeSong(url)
+
+            if (playerController.currentSongUrl === url) {
+                playerController.stopMusic()
+                playerController.currentSongUrl = ""
+            }
+
+            refreshCurrentCollection()
+        } else if (currentIndex === 1) {
+            // 我喜欢的音乐：取消喜欢
+            var song = SongBroker.singleton().findSongByUrl(url)
+            if (song) {
+                song.setLiked(false)
+            }
+            currentCollection = broker.findCollection(currentIndex)
+            if (currentCollection) {
+                currentCollection.removeSongByUrl(url)
+            }
+            SongBroker.singleton().save()
+            if (playerController.currentSongUrl === url) {
+                playerController.updateLikeStatus()
+            }
+            refreshCurrentCollection()
+        } else {
+            // 自定义歌单：只从当前歌单移除
+            currentCollection = broker.findCollection(currentIndex)
+            if (currentCollection) {
+                currentCollection.removeSongByUrl(url)
+                refreshCurrentCollection()
+                broker.save()
+            }
+        }
+    }
+
     Component.onCompleted: {
         var broker = CollectionBroker.singleton()
         for (var i = 0; i < broker.count(); i++) {
@@ -114,6 +172,10 @@ Window {
 
         playerController.likeToggled.connect(function(url, liked) {
             refreshCurrentCollection()
+        })
+
+        musicListMenu.deleteRequested.connect(function(url) {
+            handleDeleteSong(url)
         })
     }
 

@@ -13,11 +13,11 @@ SongBroker::SongBroker(QObject *parent)
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QByteArray data = file.readAll();
         QJsonDocument doc = QJsonDocument::fromJson(data);
-        
+
         if (doc.isArray()) {
             QJsonArray array = doc.array();
             SongFactory factory;
-            
+
             for (const QJsonValue& value : array) {
                 if (value.isObject()) {
                     QJsonObject obj = value.toObject();
@@ -72,7 +72,10 @@ QList<Song *> SongBroker::getAllSongs()
 
 void SongBroker::setSongLiked(QString url, bool liked)
 {
-    findSongByUrl(url)->setLiked(liked);
+    Song* song = findSongByUrl(url);
+    if (song) {
+        song->setLiked(liked);
+    }
 }
 
 void SongBroker::save()
@@ -91,4 +94,16 @@ void SongBroker::save()
         QByteArray data = doc.toJson();
         file.write(data);
     }
+}
+
+void SongBroker::removeSong(QString url)
+{
+    for (int i = 0; i < m_songs.size(); ++i) {
+        if (m_songs[i]->url() == url) {
+            delete m_songs[i];
+            m_songs.removeAt(i);
+            break;
+        }
+    }
+    save();
 }

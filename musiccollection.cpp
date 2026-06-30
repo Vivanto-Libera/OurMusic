@@ -31,6 +31,16 @@ void MusicCollection::removeSong(int index)
     }
 }
 
+void MusicCollection::removeSongByUrl(QString url)
+{
+    for (int i = 0; i < m_songs.size(); ++i) {
+        if (m_songs[i] == url) {
+            m_songs.removeAt(i);
+            break;
+        }
+    }
+}
+
 QList<QString> MusicCollection::getAllSongs() const
 {
     return m_songs;

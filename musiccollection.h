@@ -18,6 +18,7 @@ public:
     void setName(const QString& name);
     Q_INVOKABLE void addSong(QString song);
     Q_INVOKABLE void removeSong(int index);
+    Q_INVOKABLE void removeSongByUrl(QString url);
     Q_INVOKABLE QList<QString> getAllSongs() const;
     Q_INVOKABLE QString getSong(int index) const;
     Q_INVOKABLE int count() const;

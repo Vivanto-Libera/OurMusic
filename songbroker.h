@@ -19,6 +19,7 @@ public:
     Q_INVOKABLE QList<Song*> getAllSongs();
     Q_INVOKABLE void setSongLiked(QString url, bool liked);
     Q_INVOKABLE void save();
+    Q_INVOKABLE void removeSong(QString url);
 
 private:
     QList<Song*> m_songs;
