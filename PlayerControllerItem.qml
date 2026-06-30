@@ -55,6 +55,7 @@ Rectangle {
         mediaPlayer.source = url
         mediaPlayer.play()
         root.currentSongUrl = url
+        updateLikeStatus()
     }
 
     // 设置播放列表
@@ -76,6 +77,7 @@ Rectangle {
             mediaPlayer.source = url
             currentSongUrl = url
             mediaPlayer.play()
+            updateLikeStatus()
         }
     }
 
@@ -191,6 +193,12 @@ Rectangle {
                     text: "喜欢"
                     delay: 500
                 }
+                onClicked: {
+                           if (root.currentSongUrl !== "") {
+                               root.likeToggled(root.currentSongUrl, like.checked)
+                               SongBroker.singleton().setSongLiked(root.currentSongUrl, like.checked)
+                           }
+                       }
             }
 
             Button {
@@ -627,5 +635,16 @@ Rectangle {
         function onCurrentIndexChanged() {
             currentSongName = PlayList.currentIndex >= 0 ? PlayList.getName(PlayList.currentIndex) : ""
         }
+    }
+    signal likeToggled(string url, bool liked)
+
+    // 新增：更新喜欢按钮状态
+    function updateLikeStatus() {
+        if (currentSongUrl !== "") {
+            var song = SongBroker.singleton().findSongByUrl(currentSongUrl)
+            like.checked = song ? song.liked : false
+        } else {
+           like.checked = false
+          }
     }
 }
