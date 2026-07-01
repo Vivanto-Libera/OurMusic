@@ -143,6 +143,9 @@ Item {
                     root.addSongToPlaylistRequested(model.name, model.url)
                 }
 
+                onLikeClicked: {
+                    root.songModel.setProperty(index, "isLiked", liked)
+                }
                 onCollected: {
                     root.openCollectionSelector(url)
                 }

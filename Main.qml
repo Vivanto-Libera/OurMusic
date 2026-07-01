@@ -66,8 +66,8 @@ Window {
     }
 
     function refreshCurrentCollection() {
-        var broker = CollectionBroker.singleton()
-        var collection = broker.findCollection(musicListTabBar.currentIndex)
+        let broker = CollectionBroker.singleton()
+        let collection = broker.findCollection(musicListTabBar.currentIndex)
         if (!collection) return
 
         musicListMenu.menuName = collection.name
@@ -79,9 +79,9 @@ Window {
             broker.reloadAllMusic()
         }
 
-        for (var j = 0; j < collection.count(); j++) {
-            var songUrl = collection.getSong(j)
-            var song = SongBroker.singleton().findSongByUrl(songUrl)
+        for (let j = 0; j < collection.count(); j++) {
+            let songUrl = collection.getSong(j)
+            let song = SongBroker.singleton().findSongByUrl(songUrl)
             if (song) {
                 musicListMenu.addSong(song)
             }
@@ -92,15 +92,15 @@ Window {
     }
 
     function handleDeleteSong(url) {
-        var broker = CollectionBroker.singleton()
-        var currentIndex = musicListTabBar.currentIndex
-        var currentCollection = null
+        let broker = CollectionBroker.singleton()
+        let currentIndex = musicListTabBar.currentIndex
+        let currentCollection = null
 
         if (currentIndex === 0) {
             // 全部音乐：彻底删除
-            var allSongs = SongBroker.singleton().getAllSongs()
-            var found = false
-            for (var i = 0; i < allSongs.length; i++) {
+            let allSongs = SongBroker.singleton().getAllSongs()
+            let found = false
+            for (let i = 0; i < allSongs.length; i++) {
                 if (allSongs[i].url === url) {
                     found = true
                     break
@@ -109,8 +109,8 @@ Window {
             if (!found) return
 
             // 从所有歌单中移除
-            for (var idx = 0; idx < broker.count(); idx++) {
-                var coll = broker.findCollection(idx)
+            for (let idx = 0; idx < broker.count(); idx++) {
+                let coll = broker.findCollection(idx)
                 if (coll) {
                     coll.removeSongByUrl(url)
                 }
@@ -125,7 +125,7 @@ Window {
             refreshCurrentCollection()
         } else if (currentIndex === 1) {
             // 我喜欢的音乐：取消喜欢
-            var song = SongBroker.singleton().findSongByUrl(url)
+            let song = SongBroker.singleton().findSongByUrl(url)
             if (song) {
                 song.setLiked(false)
             }
@@ -133,7 +133,6 @@ Window {
             if (currentCollection) {
                 currentCollection.removeSongByUrl(url)
             }
-            SongBroker.singleton().save()
             if (playerController.currentSongUrl === url) {
                 playerController.updateLikeStatus()
             }
@@ -144,15 +143,14 @@ Window {
             if (currentCollection) {
                 currentCollection.removeSongByUrl(url)
                 refreshCurrentCollection()
-                broker.save()
             }
         }
     }
 
     Component.onCompleted: {
-        var broker = CollectionBroker.singleton()
-        for (var i = 0; i < broker.count(); i++) {
-            var collection = broker.findCollection(i)
+        let broker = CollectionBroker.singleton()
+        for (let i = 0; i < broker.count(); i++) {
+            let collection = broker.findCollection(i)
             if (collection) {
                 musicListTabBar.addMusicList(collection.name)
             }
@@ -167,11 +165,12 @@ Window {
 
         musicListTabBar.songAdded.connect(function(filePath) {
             SongBroker.singleton().addSong(filePath)
-            SongBroker.singleton().save()
         })
 
         playerController.likeToggled.connect(function(url, liked) {
-            refreshCurrentCollection()
+            if (musicListTabBar.currentIndex === 1) {
+                refreshCurrentCollection()
+            }
         })
 
         musicListMenu.deleteRequested.connect(function(url) {
