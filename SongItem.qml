@@ -194,5 +194,29 @@ Rectangle {
     Component.onCompleted:
     {
         likeBtn.checked = isLiked
+        updateLikeConnection()
+    }
+
+    function updateLikeConnection() {
+        let song = SongBroker.singleton().findSongByUrl(root.url)
+        likeConnection.target = song
+        if (song) {
+            likeBtn.checked = song.liked
+        }
+    }
+
+    onUrlChanged: {
+        updateLikeConnection()
+    }
+
+    Connections {
+        id: likeConnection
+        function onLikedChanged() {
+            let song = SongBroker.singleton().findSongByUrl(root.url)
+            if (song) {
+                root.isLiked = song.liked
+                likeBtn.checked = song.liked
+            }
+        }
     }
 }
