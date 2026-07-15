@@ -177,12 +177,10 @@ Item {
     }
 
     function setEditable(editable) {
-        if (typeof editable === "boolean") {
-            root.editable = editable
-            edit.visible = editable
-            deleteBtn.visible = editable
-            addBtn.visible = editable
-        }
+        root.editable = editable
+        edit.visible = editable
+        deleteBtn.visible = editable
+        addBtn.visible = editable
     }
 
     function openCollectionSelector(url) {

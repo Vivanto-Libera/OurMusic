@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 import OurMusic
 
-Window {
+ApplicationWindow {
     id: window
     width: 1080
     height: 640
