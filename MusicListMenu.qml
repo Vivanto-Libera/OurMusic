@@ -97,7 +97,6 @@ Item {
             for (let j = 0; j < root.songModel.count; j++) {
                 existingUrls.push(root.songModel.get(j).url)
             }
-            
             for (let i = 0; i < allSongs.length; i++) {
                 let song = allSongs[i]
                 if (existingUrls.indexOf(song.url) === -1) {
